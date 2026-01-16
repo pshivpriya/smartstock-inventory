@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Register Employee | SmartStock</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+body{
+  margin:0;
+  font-family:"Segoe UI",sans-serif;
+  background:linear-gradient(135deg,#020617,#0f172a);
+  color:#e5e7eb;
+}
+header{
+  padding:20px 40px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  background:rgba(15,23,42,.9);
+}
+button{
+  padding:10px 18px;
+  border-radius:999px;
+  border:none;
+  font-weight:bold;
+  cursor:pointer;
+}
+.dashboard-btn{background:#38bdf8;color:#020617}
+.logout-btn{background:#ef4444;color:white}
+.main{
+  display:flex;
+  justify-content:center;
+  padding:60px 20px;
+}
+.card{
+  width:100%;
+  max-width:520px;
+  background:rgba(255,255,255,.07);
+  backdrop-filter:blur(18px);
+  border-radius:20px;
+  padding:40px;
+}
+.card h2{
+  margin-top:0;
+  text-align:center;
+}
+input{
+  width:100%;
+  padding:14px;
+  margin-bottom:16px;
+  border-radius:12px;
+  border:none;
+  background:#020617;
+  color:#e5e7eb;
+}
+.primary{
+  width:100%;
+  padding:14px;
+  border-radius:999px;
+  background:linear-gradient(90deg,#0ea5e9,#22c55e);
+  font-size:15px;
+}
+.message{
+  margin-top:16px;
+  font-weight:bold;
+  text-align:center;
+}
+.note{
+  font-size:13px;
+  opacity:.8;
+  text-align:center;
+  margin-bottom:12px;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <h2>👤 Register Employee</h2>
+  <div>
+    <button class="dashboard-btn" onclick="goDashboard()">Dashboard</button>
+    <button class="logout-btn" onclick="logout()">Logout</button>
+  </div>
+</header>
+
+<main class="main">
+  <section class="card">
+
+    <h2>Add New Employee</h2>
+    <p class="note">Default password will be shared with employee</p>
+
+    <input id="name" placeholder="Employee Name">
+    <input id="email" type="email" placeholder="Employee Email">
+    <input id="password" type="password" placeholder="Temporary Password">
+
+    <button class="primary" onclick="registerEmployee()">
+      Register Employee
+    </button>
+
+    <div class="message" id="msg"></div>
+
+  </section>
+</main>
+
+<script>
+const BASE_URL = "http://127.0.0.1:5000";
+
+/* 🔐 ADMIN AUTH GUARD */
+if (localStorage.getItem("adminLoggedIn") !== "true") {
+  window.location.href = "/admin/login";
+}
+
+function registerEmployee(){
+  const name = document.getElementById("name").value.trim();
+  const email = document.getElementById("email").value.trim();
+  const password = document.getElementById("password").value;
+  const msg = document.getElementById("msg");
+
+  if(!name || !email || !password){
+    msg.style.color="#f87171";
+    msg.textContent="❌ Please fill all fields";
+    return;
+  }
+
+  fetch(`${BASE_URL}/register`,{
+    method:"POST",
+    headers:{ "Content-Type":"application/json" },
+    body:JSON.stringify({
+      name,
+      email,
+      password,
+      role:"employee"
+    })
+  })
+  .then(res => res.json())
+  .then(data => {
+    if(data.error){
+      msg.style.color="#f87171";
+      msg.textContent="❌ " + data.error;
+    } else {
+      msg.style.color="#22c55e";
+      msg.textContent="✅ Employee registered successfully";
+
+      document.getElementById("name").value="";
+      document.getElementById("email").value="";
+      document.getElementById("password").value="";
+    }
+  })
+  .catch(()=>{
+    msg.style.color="#f87171";
+    msg.textContent="❌ Server error";
+  });
+}
+
+function goDashboard(){
+  window.location.href="/admin/dashboard";
+}
+
+function logout(){
+  localStorage.removeItem("adminLoggedIn");
+  window.location.href="/admin/login";
+}
+</script>
+
+</body>
+</html>

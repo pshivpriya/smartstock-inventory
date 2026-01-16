@@ -1,0 +1,53 @@
+<h2>⚠️ Low-Stock Alerts</h2>
+
+<label>
+  Enable Alerts
+  <input type="checkbox" id="enableAlerts">
+</label><br><br>
+
+<label>
+  Minimum Stock Threshold
+  <input type="number" id="threshold" min="1">
+</label><br><br>
+
+<h3>Alert Method</h3>
+
+<label>
+  Email Alerts
+  <input type="checkbox" id="emailAlert">
+</label><br>
+
+<label>
+  SMS Alerts
+  <input type="checkbox" id="smsAlert">
+</label><br><br>
+
+<button onclick="saveSettings()">Save Settings</button>
+
+<script>
+const BASE_URL = "http://127.0.0.1:5000";
+
+fetch(`${BASE_URL}/alert-settings`)
+.then(res => res.json())
+.then(data => {
+  enableAlerts.checked = data.enableAlerts;
+  emailAlert.checked = data.emailAlert;
+  smsAlert.checked = data.smsAlert;
+  threshold.value = data.globalThreshold;
+});
+
+function saveSettings(){
+  fetch(`${BASE_URL}/alert-settings`,{
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({
+      enableAlerts: enableAlerts.checked,
+      emailAlert: emailAlert.checked,
+      smsAlert: smsAlert.checked,
+      globalThreshold: threshold.value
+    })
+  })
+  .then(res=>res.json())
+  .then(d=>alert(d.message));
+}
+</script>

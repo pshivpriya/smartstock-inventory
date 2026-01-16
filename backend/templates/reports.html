@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Reports & Export | SmartStock</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+body{
+  margin:0;
+  font-family:"Segoe UI",sans-serif;
+  background:linear-gradient(135deg,#020617,#0f172a);
+  color:#e5e7eb;
+}
+header{
+  padding:20px 40px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+button{
+  border:none;
+  padding:10px 20px;
+  border-radius:999px;
+  cursor:pointer;
+  font-weight:bold;
+}
+.back-btn{background:#38bdf8;color:#020617}
+.export-btn{background:#22c55e;color:#022c22;margin-right:10px}
+
+.card{
+  background:rgba(255,255,255,.08);
+  border-radius:18px;
+  padding:24px;
+  margin:30px;
+}
+
+/* ✅ CHART SIZE CONTROL */
+.chart-wrapper{
+  width:600px;
+  height:400px;
+  margin:0 auto;
+}
+
+table{
+  width:100%;
+  border-collapse:collapse;
+}
+th,td{
+  padding:14px;
+  text-align:center;
+}
+th{background:rgba(255,255,255,.12)}
+</style>
+</head>
+
+<body>
+
+<header>
+  <h2>📊 Reports & Export</h2>
+  <button class="back-btn" onclick="location.href='/admin/dashboard'">← Dashboard</button>
+</header>
+
+<!-- INVENTORY SUMMARY -->
+<div class="card">
+  <h3>📦 Inventory Summary</h3>
+
+  <button class="export-btn" onclick="exportCSV()">⬇ Export CSV</button>
+  <button class="export-btn" onclick="exportPDF()">⬇ Export PDF</button>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Product</th>
+        <th>Category</th>
+        <th>Supplier</th>
+        <th>Quantity</th>
+        <th>Value (₹)</th>
+      </tr>
+    </thead>
+    <tbody id="summaryTable"></tbody>
+  </table>
+</div>
+
+<!-- 📊 STOCK QUANTITY CHART -->
+<div class="card">
+  <h3>📊 Stock Quantity Chart</h3>
+  <div class="chart-wrapper">
+    <canvas id="qtyChart"></canvas>
+  </div>
+</div>
+
+<!-- 💰 INVENTORY VALUE CHART -->
+<div class="card">
+  <h3>💰 Inventory Value Chart</h3>
+  <div class="chart-wrapper">
+    <canvas id="valueChart"></canvas>
+  </div>
+</div>
+
+<script>
+const BASE_URL = "http://127.0.0.1:5000";
+
+/* LOAD INVENTORY + CHART DATA */
+fetch(`${BASE_URL}/api/products`)
+.then(res => res.json())
+.then(products => {
+
+  const table = document.getElementById("summaryTable");
+  table.innerHTML = "";
+
+  let labels = [];
+  let qtyData = [];
+  let valueData = [];
+
+  if(products.length === 0){
+    table.innerHTML = `<tr><td colspan="5">No data available</td></tr>`;
+    return;
+  }
+
+  products.forEach(p => {
+    const qty = Number(p.quantity) || 0;
+    const cost = Number(p.costPrice) || 0;
+    const value = qty * cost;
+
+    table.innerHTML += `
+      <tr>
+        <td>${p.name}</td>
+        <td>${p.category}</td>
+        <td>${p.supplier}</td>
+        <td>${qty}</td>
+        <td>₹${value.toLocaleString("en-IN")}</td>
+      </tr>
+    `;
+
+    labels.push(p.name);
+    qtyData.push(qty);
+    valueData.push(value);
+  });
+
+  /* 📊 STOCK QUANTITY CHART */
+  new Chart(document.getElementById("qtyChart"), {
+    type: "bar",
+    data: {
+      labels,
+      datasets: [{
+        label: "Quantity",
+        data: qtyData,
+        backgroundColor: "#38bdf8"
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins:{
+        legend:{ display:false }
+      }
+    }
+  });
+
+  /* 💰 INVENTORY VALUE CHART */
+  new Chart(document.getElementById("valueChart"), {
+    type: "pie",
+    data: {
+      labels,
+      datasets: [{
+        label: "Value",
+        data: valueData
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins:{
+        legend:{
+          position:"bottom",
+          labels:{ boxWidth:12, font:{ size:10 } }
+        }
+      }
+    }
+  });
+
+});
+
+/* EXPORTS */
+function exportCSV(){
+  window.open(`${BASE_URL}/export/inventory-csv`, "_blank");
+}
+function exportPDF(){
+  window.open(`${BASE_URL}/export/inventory-pdf`, "_blank");
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head><title>Email Logs</title></head>
+<body>
+
+<h2>📧 Low Stock Email Logs</h2>
+
+<table border="1">
+<tr><th>Product</th><th>Qty</th><th>Sent At</th></tr>
+<tbody id="table"></tbody>
+</table>
+
+<script>
+fetch("http://127.0.0.1:5000/email-logs")
+.then(r=>r.json())
+.then(data=>{
+  const table=document.getElementById("table");
+  data.forEach(e=>{
+    table.innerHTML+=`
+      <tr>
+        <td>${e.product}</td>
+        <td>${e.quantity}</td>
+        <td>${new Date(e.sentAt).toLocaleString()}</td>
+      </tr>`;
+  });
+});
+</script>
+
+</body>
+</html>

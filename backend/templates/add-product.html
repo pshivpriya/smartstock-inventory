@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Add Product | SmartStock</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+body{
+  margin:0;
+  font-family:"Segoe UI",sans-serif;
+  background:linear-gradient(135deg,#0f172a,#020617);
+  color:#e5e7eb;
+}
+header{
+  padding:20px 40px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  background:rgba(15,23,42,.9);
+}
+button{
+  border:none;
+  padding:8px 18px;
+  border-radius:999px;
+  cursor:pointer;
+  font-weight:bold;
+}
+.dashboard-btn{background:#38bdf8;color:#020617}
+.logout-btn{background:#ef4444;color:white}
+
+.container{
+  padding:50px;
+  display:flex;
+  justify-content:center;
+}
+.card{
+  width:100%;
+  max-width:600px;
+  background:rgba(255,255,255,.08);
+  backdrop-filter:blur(16px);
+  border-radius:18px;
+  padding:30px;
+}
+.form-group{margin-bottom:18px}
+label{display:block;margin-bottom:6px}
+input{
+  width:100%;
+  padding:12px;
+  border-radius:10px;
+  border:none;
+  background:#020617;
+  color:#e5e7eb;
+}
+.primary-btn{
+  width:100%;
+  padding:14px;
+  border-radius:999px;
+  background:linear-gradient(90deg,#0ea5e9,#22c55e);
+  font-weight:bold;
+  cursor:pointer;
+}
+.message{
+  margin-top:12px;
+  font-weight:bold;
+  text-align:center;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <h2>➕ Add Product</h2>
+  <div>
+    <button class="dashboard-btn" onclick="goDashboard()">Dashboard</button>
+    <button class="logout-btn" onclick="logout()">Logout</button>
+  </div>
+</header>
+
+<div class="container">
+  <div class="card">
+
+    <div class="form-group">
+      <label>Product Name</label>
+      <input id="name" placeholder="Eraser">
+    </div>
+
+    <div class="form-group">
+      <label>Category</label>
+      <input id="category" placeholder="Stationery">
+    </div>
+
+    <div class="form-group">
+      <label>Supplier</label>
+      <input id="supplier" placeholder="Supplier A">
+    </div>
+
+    <div class="form-group">
+      <label>Quantity</label>
+      <input id="quantity" type="number" min="0" value="0">
+    </div>
+
+    <div class="form-group">
+      <label>Cost Price (₹)</label>
+      <input id="costPrice" type="number" min="1">
+    </div>
+
+    <div class="form-group">
+      <label>Low Stock Limit</label>
+      <input id="lowStock" type="number" value="10" min="1">
+    </div>
+
+    <button class="primary-btn" onclick="addProduct()">Add Product</button>
+    <div class="message" id="msg"></div>
+
+  </div>
+</div>
+
+<script>
+const BASE_URL = "http://127.0.0.1:5000";
+
+/* 🔐 ADMIN AUTH GUARD */
+if (localStorage.getItem("adminLoggedIn") !== "true") {
+  window.location.href = "/admin/login";
+}
+
+/* ➕ ADD PRODUCT */
+function addProduct(){
+  const name = document.getElementById("name").value.trim();
+  const category = document.getElementById("category").value.trim();
+  const supplier = document.getElementById("supplier").value.trim();
+  const quantity = Number(document.getElementById("quantity").value);
+  const costPrice = Number(document.getElementById("costPrice").value);
+  const lowStock = Number(document.getElementById("lowStock").value);
+  const msg = document.getElementById("msg");
+
+  if(!name || !category || !supplier || quantity < 0 || costPrice <= 0 || lowStock <= 0){
+    msg.style.color="#f87171";
+    msg.textContent="❌ Please enter valid product details";
+    return;
+  }
+
+  fetch(`${BASE_URL}/add-product`, {
+    method:"POST",
+    headers:{ "Content-Type":"application/json" },
+    body:JSON.stringify({
+      name,
+      category,
+      supplier,
+      quantity,
+      costPrice,
+      lowStock
+    })
+  })
+  .then(res => res.json())
+  .then(() => {
+    msg.style.color="#22c55e";
+    msg.textContent="✅ Product added successfully";
+
+    setTimeout(() => {
+      window.location.href = "/products";
+    }, 800);
+  })
+  .catch(() => {
+    msg.style.color="#f87171";
+    msg.textContent="❌ Server error. Try again";
+  });
+}
+
+/* 🔗 NAVIGATION */
+function goDashboard(){
+  window.location.href="/admin/dashboard";
+}
+
+function logout(){
+  localStorage.removeItem("adminLoggedIn");
+  window.location.href="/admin/login";
+}
+</script>
+
+</body>
+</html>

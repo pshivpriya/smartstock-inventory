@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Manage Users | SmartStock</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+body{
+  margin:0;
+  font-family:"Segoe UI",sans-serif;
+  background:linear-gradient(135deg,#0f172a,#020617);
+  color:#e5e7eb
+}
+header{
+  padding:20px 40px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  background:rgba(15,23,42,.9)
+}
+button{
+  padding:8px 16px;
+  border-radius:999px;
+  border:none;
+  font-weight:bold;
+  cursor:pointer
+}
+.dashboard-btn{background:#38bdf8;color:#020617}
+.logout-btn{background:#ef4444;color:white}
+
+.container{padding:40px}
+
+table{
+  width:100%;
+  border-collapse:collapse;
+  background:rgba(255,255,255,.08);
+  border-radius:12px;
+  overflow:hidden
+}
+th,td{
+  padding:14px;
+  text-align:center;
+  border-bottom:1px solid rgba(255,255,255,.1)
+}
+th{background:rgba(255,255,255,.12)}
+
+.admin{color:#22c55e;font-weight:bold}
+.employee{color:#facc15;font-weight:bold}
+
+.promote-btn{
+  background:#22c55e;
+  color:#020617;
+  margin-right:8px
+}
+.demote-btn{
+  background:#facc15;
+  color:#020617;
+  margin-right:8px
+}
+.delete-btn{
+  background:#ef4444;
+  color:white
+}
+.empty{
+  text-align:center;
+  opacity:.7;
+  padding:30px
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <h2>👥 Manage Users</h2>
+  <div>
+    <button class="dashboard-btn" onclick="goDashboard()">Dashboard</button>
+    <button class="logout-btn" onclick="logout()">Logout</button>
+  </div>
+</header>
+
+<div class="container">
+<table>
+<thead>
+<tr>
+  <th>Name</th>
+  <th>Email</th>
+  <th>Role</th>
+  <th>Actions</th>
+</tr>
+</thead>
+<tbody id="table"></tbody>
+</table>
+</div>
+
+<script>
+const BASE_URL = "http://127.0.0.1:5000";
+const currentUser = localStorage.getItem("userEmail");
+
+/* 🔐 ADMIN GUARD */
+if (
+  localStorage.getItem("adminLoggedIn") !== "true" ||
+  localStorage.getItem("role") !== "admin" ||
+  !currentUser
+) {
+  location.href = "/admin/login";
+}
+
+/* 👥 LOAD USERS */
+function loadUsers(){
+  fetch(`${BASE_URL}/users`)
+    .then(res => res.json())
+    .then(users => {
+      const table = document.getElementById("table");
+      table.innerHTML = "";
+
+      if(!Array.isArray(users) || users.length === 0){
+        table.innerHTML =
+          `<tr><td colspan="4" class="empty">No users found</td></tr>`;
+        return;
+      }
+
+      users.forEach(u => {
+        table.innerHTML += `
+          <tr>
+            <td>${u.name}</td>
+            <td>${u.email}</td>
+            <td class="${u.role === "admin" ? "admin" : "employee"}">${u.role}</td>
+            <td>
+              ${
+                u.role === "employee"
+                ? `<button class="promote-btn" onclick="promote('${u.email}')">Promote</button>`
+                : (u.email !== currentUser
+                  ? `<button class="demote-btn" onclick="demote('${u.email}')">Demote</button>`
+                  : ``)
+              }
+              ${
+                u.email !== currentUser
+                ? `<button class="delete-btn" onclick="deleteUser('${u.email}')">Delete</button>`
+                : ``
+              }
+            </td>
+          </tr>`;
+      });
+    })
+    .catch(() => {
+      document.getElementById("table").innerHTML =
+        `<tr><td colspan="4" class="empty">Server error</td></tr>`;
+    });
+}
+
+/* 🔼 PROMOTE */
+function promote(email){
+  if(!confirm("Promote this user to Admin?")) return;
+
+  fetch(`${BASE_URL}/promote`,{
+    method:"POST",
+    headers:{ "Content-Type":"application/json" },
+    body:JSON.stringify({ email })
+  })
+  .then(res=>res.json())
+  .then(data=>{
+    if(data.error) alert(data.error);
+    else loadUsers();
+  })
+  .catch(()=>alert("Server error"));
+}
+
+/* 🔽 DEMOTE */
+function demote(email){
+  if(!confirm("Demote this admin to Employee?")) return;
+
+  fetch(`${BASE_URL}/demote`,{
+    method:"POST",
+    headers:{ "Content-Type":"application/json" },
+    body:JSON.stringify({
+      email,
+      requester: currentUser
+    })
+  })
+  .then(res=>res.json())
+  .then(data=>{
+    if(data.error) alert(data.error);
+    else loadUsers();
+  })
+  .catch(()=>alert("Server error"));
+}
+
+/* ❌ DELETE */
+function deleteUser(email){
+  if(!confirm("Are you sure you want to delete this user?")) return;
+
+  fetch(`${BASE_URL}/delete-user`,{
+    method:"POST",
+    headers:{ "Content-Type":"application/json" },
+    body:JSON.stringify({
+      email,
+      requester: currentUser
+    })
+  })
+  .then(res=>res.json())
+  .then(data=>{
+    if(data.error) alert(data.error);
+    else loadUsers();
+  })
+  .catch(()=>alert("Server error"));
+}
+
+function goDashboard(){ location.href="/admin/dashboard"; }
+function logout(){
+  localStorage.clear();
+  location.href="/admin/login";
+}
+
+loadUsers();
+</script>
+
+</body>
+</html>

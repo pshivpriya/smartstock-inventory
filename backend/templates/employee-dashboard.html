@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Employee Dashboard | SmartStock</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+body{
+  margin:0;
+  font-family:"Segoe UI",sans-serif;
+  background:linear-gradient(135deg,#020617,#0f172a);
+  color:#e5e7eb;
+}
+header{
+  padding:20px 40px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  background:#0f172a;
+}
+.logout-btn{
+  background:#ef4444;
+  color:white;
+  border:none;
+  padding:8px 18px;
+  border-radius:999px;
+  cursor:pointer;
+  font-weight:bold;
+}
+.container{padding:40px}
+.section-title{
+  margin:40px 0 15px;
+  font-size:18px;
+  opacity:.85;
+}
+.cards{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+  gap:24px;
+}
+.card{
+  background:rgba(255,255,255,.08);
+  border-radius:18px;
+  padding:30px;
+  text-align:center;
+  cursor:pointer;
+  transition:.2s;
+}
+.card:hover{transform:translateY(-4px)}
+.small-card{
+  background:rgba(255,255,255,.08);
+  border-radius:16px;
+  padding:20px;
+}
+.list-item{
+  display:flex;
+  justify-content:space-between;
+  padding:8px 0;
+  border-bottom:1px solid rgba(255,255,255,.1);
+}
+.list-item:last-child{border-bottom:none}
+.badge{
+  padding:4px 10px;
+  border-radius:999px;
+  font-size:12px;
+}
+.low{background:#f87171;color:#020617}
+.in{color:#4ade80}
+.out{color:#f87171}
+.footer-note{
+  margin-top:40px;
+  text-align:center;
+  font-size:13px;
+  opacity:.6;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <h2>👤 Employee Dashboard</h2>
+  <button class="logout-btn" onclick="logout()">Logout</button>
+</header>
+
+<div class="container">
+
+<!-- MAIN ACTIONS -->
+<div class="cards">
+  <div class="card" onclick="goProducts()">
+    <h2>📦</h2>
+    <p>View Products</p>
+  </div>
+  <div class="card" onclick="goTransactions()">
+    <h2>📜</h2>
+    <p>View Transactions</p>
+  </div>
+</div>
+
+<!-- PROFILE -->
+<h3 class="section-title">👤 Profile</h3>
+<div class="small-card">
+  <p><b>Role:</b> Employee</p>
+  <p><b>Access:</b> Read-Only</p>
+</div>
+
+<!-- TODAY SUMMARY -->
+<h3 class="section-title">📊 Today’s Summary</h3>
+<div class="small-card" id="summary">Loading...</div>
+
+<!-- LOW STOCK -->
+<h3 class="section-title">⚠️ Low Stock Items</h3>
+<div class="small-card" id="lowStock">Loading...</div>
+
+<!-- RECENT TRANSACTIONS -->
+<h3 class="section-title">🕒 Recent Transactions</h3>
+<div class="small-card" id="recentTx">Loading...</div>
+
+<div class="footer-note">
+You have view-only access. Contact admin for changes.
+</div>
+
+</div>
+
+<script>
+/* 🔐 AUTH GUARD */
+const loggedIn = localStorage.getItem("loggedIn");
+const role = localStorage.getItem("role");
+
+if (loggedIn !== "true") location.href = "/employee/login";
+if (role !== "employee") location.href = "/admin/login";
+
+/* NAV */
+function goProducts(){ location.href="/products"; }
+function goTransactions(){ location.href="/transactions"; }
+function logout(){
+  localStorage.clear();
+  location.href="/employee/login";
+}
+
+/* ✅ TODAY SUMMARY (FIXED & ACCURATE) */
+fetch("/api/transactions")
+.then(res => res.json())
+.then(data => {
+  const today = new Date();
+  let inCount = 0, outCount = 0, total = 0;
+
+  data.forEach(t => {
+    // "16/01/2026, 02:40:14 PM"
+    const parts = t.date.split(",")[0].split("/");
+    const txDate = new Date(parts[2], parts[1]-1, parts[0]);
+
+    if (
+      txDate.getDate() === today.getDate() &&
+      txDate.getMonth() === today.getMonth() &&
+      txDate.getFullYear() === today.getFullYear()
+    ) {
+      total += t.quantity;
+      t.type === "IN" ? inCount++ : outCount++;
+    }
+  });
+
+  document.getElementById("summary").innerHTML = `
+    IN Transactions: ${inCount}<br>
+    OUT Transactions: ${outCount}<br>
+    Items Moved Today: ${total}
+  `;
+});
+
+/* LOW STOCK */
+fetch("/low-stock")
+.then(res=>res.json())
+.then(data=>{
+  if(data.items.length===0){
+    lowStock.innerHTML="No low stock items 🎉";
+    return;
+  }
+  lowStock.innerHTML=data.items.map(p=>`
+    <div class="list-item">
+      <span>${p.name}</span>
+      <span class="badge low">${p.quantity}</span>
+    </div>
+  `).join("");
+});
+
+/* RECENT TRANSACTIONS */
+fetch("/api/transactions")
+.then(res=>res.json())
+.then(data=>{
+  recentTx.innerHTML=data.slice(0,5).map(t=>`
+    <div class="list-item">
+      <span>${t.productName}</span>
+      <span class="${t.type==="IN"?"in":"out"}">
+        ${t.type} (${t.quantity})
+      </span>
+    </div>
+  `).join("");
+});
+</script>
+
+</body>
+</html>

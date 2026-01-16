@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Stock Transactions | SmartStock</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+body{
+  margin:0;
+  font-family:"Segoe UI",sans-serif;
+  background:#020617;
+  color:#e5e7eb;
+}
+header{
+  padding:20px 40px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  background:#0f172a;
+}
+button{
+  padding:8px 18px;
+  border-radius:999px;
+  border:none;
+  font-weight:bold;
+  cursor:pointer;
+}
+.dashboard-btn{background:#38bdf8;color:#020617}
+.logout-btn{background:#ef4444;color:white}
+.container{padding:40px}
+.card{
+  background:rgba(255,255,255,.08);
+  border-radius:16px;
+  padding:24px;
+  margin-bottom:30px;
+}
+select,input{
+  width:100%;
+  padding:12px;
+  margin:10px 0;
+  border-radius:8px;
+  border:none;
+}
+.save-btn{
+  background:#22c55e;
+  width:100%;
+  padding:12px;
+  border-radius:999px;
+  font-size:16px;
+  font-weight:bold;
+}
+table{
+  width:100%;
+  border-collapse:collapse;
+  margin-top:20px;
+}
+th,td{
+  padding:14px;
+  text-align:center;
+  border-bottom:1px solid rgba(255,255,255,.1);
+}
+th{background:rgba(255,255,255,.1)}
+.in{color:#4ade80;font-weight:bold}
+.out{color:#f87171;font-weight:bold}
+.empty{opacity:.6;font-style:italic}
+</style>
+</head>
+
+<body>
+
+<header>
+  <h2>🔄 Stock Transactions</h2>
+  <div>
+    <button class="dashboard-btn" onclick="goDashboard()">Dashboard</button>
+    <button class="logout-btn" onclick="logout()">Logout</button>
+  </div>
+</header>
+
+<div class="container">
+
+<div class="card">
+  <h3>➕ Add Transaction</h3>
+
+  <select id="product">
+    <option>Loading products...</option>
+  </select>
+
+  <select id="type">
+    <option value="IN">IN (Add Stock)</option>
+    <option value="OUT">OUT (Remove Stock)</option>
+  </select>
+
+  <input type="number" id="quantity" placeholder="Quantity" min="1">
+
+  <button class="save-btn" onclick="saveTransaction()">Save Transaction</button>
+</div>
+
+<div class="card">
+  <h3>📜 Transaction History</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Product</th>
+        <th>Type</th>
+        <th>Quantity</th>
+        <th>Date & Time</th>
+      </tr>
+    </thead>
+    <tbody id="transactionTable"></tbody>
+  </table>
+</div>
+
+</div>
+
+<script>
+const BASE_URL = "http://127.0.0.1:5000";
+
+if (localStorage.getItem("loggedIn") !== "true") {
+  location.href = "/admin/login";
+}
+
+const role = localStorage.getItem("role");
+
+/* LOAD PRODUCTS */
+function loadProducts(selectedId=null){
+  fetch(`${BASE_URL}/api/products`)
+  .then(res => res.json())
+  .then(products => {
+    const sel = document.getElementById("product");
+    sel.innerHTML = `<option value="">Select Product</option>`;
+    products.forEach(p => {
+      sel.innerHTML += `
+        <option value="${p.id}">
+          ${p.name} (Stock: ${p.quantity})
+        </option>`;
+    });
+    if(selectedId) sel.value = selectedId;
+  });
+}
+
+/* SAVE TRANSACTION */
+function saveTransaction(){
+  if (role !== "admin") {
+    alert("Only admin can add transactions");
+    return;
+  }
+
+  const productId = document.getElementById("product").value;
+  const type = document.getElementById("type").value;
+  const quantity = Number(document.getElementById("quantity").value);
+
+  if (!productId || quantity <= 0) {
+    alert("Enter valid details");
+    return;
+  }
+
+function goDashboard(){
+  const role = localStorage.getItem("role");
+
+  if (role === "admin") {
+    location.href = "/admin/dashboard";
+  } else if (role === "employee") {
+    location.href = "/employee/dashboard";
+  } else {
+    location.href = "/employee/login";
+  }
+}
+
+
+  const formData = new FormData();
+  formData.append("product_id", productId);
+  formData.append("transaction_type", type);
+  formData.append("quantity", quantity);
+
+  fetch(`${BASE_URL}/add_transaction`, {
+    method: "POST",
+    body: formData
+  })
+  .then(res => res.json())
+  .then(data => {
+    if (data.error) {
+      alert(data.error);
+      return;
+    }
+    alert("Transaction saved successfully!");
+    document.getElementById("quantity").value = "";
+    loadProducts(productId);
+    loadTransactions();
+  });
+}
+
+/* LOAD TRANSACTIONS */
+function loadTransactions(){
+  fetch(`${BASE_URL}/api/transactions`)
+  .then(res => res.json())
+  .then(data => {
+    const table = document.getElementById("transactionTable");
+    table.innerHTML = "";
+
+    if (!Array.isArray(data) || data.length === 0) {
+      table.innerHTML =
+        `<tr><td colspan="4" class="empty">No transactions yet</td></tr>`;
+      return;
+    }
+
+    data.forEach(t => {
+      const dateText = t.date ? t.date : "-";
+
+      table.innerHTML += `
+        <tr>
+          <td>${t.productName || "Unknown Product"}</td>
+          <td class="${t.type === "IN" ? "in" : "out"}">${t.type}</td>
+          <td>${t.quantity}</td>
+          <td>${dateText}</td>
+        </tr>
+      `;
+    });
+  })
+  .catch(err => console.error("Transaction load error:", err));
+}
+
+loadProducts();
+loadTransactions();
+
+function goDashboard(){ location.href="/admin/dashboard"; }
+function logout(){ localStorage.clear(); location.href="/admin/login"; }
+</script>
+
+</body>
+</html>

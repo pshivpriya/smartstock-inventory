@@ -1,0 +1,191 @@
+/* ================= GLOBAL RESET ================= */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Segoe UI", Tahoma, sans-serif;
+}
+
+/* ================= BODY ================= */
+body {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+  color: #ffffff;
+}
+
+/* ================= HEADER / NAVBAR ================= */
+.header {
+  width: 100%;
+  padding: 16px 40px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(0, 0, 0, 0.45);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.logo-icon {
+  font-size: 28px;
+}
+
+.logo-text h1 {
+  font-size: 20px;
+}
+
+.logo-text p {
+  font-size: 12px;
+  opacity: 0.7;
+}
+
+.nav {
+  display: flex;
+  gap: 16px;
+}
+
+.nav-btn {
+  padding: 8px 16px;
+  border-radius: 20px;
+  text-decoration: none;
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  transition: 0.3s;
+}
+
+.nav-btn:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.active-tab {
+  border-color: #00c6ff;
+  box-shadow: 0 0 8px rgba(0, 198, 255, 0.6);
+}
+
+.user-info {
+  font-size: 14px;
+  opacity: 0.8;
+}
+
+/* ================= PAGE CONTAINER ================= */
+.page-wrapper {
+  display: flex;
+  justify-content: center;
+  padding: 60px 20px;
+}
+
+/* ================= CARD / FORM CONTAINER ================= */
+.container {
+  width: 100%;
+  max-width: 440px;
+  background: rgba(0, 0, 0, 0.45);
+  padding: 30px;
+  border-radius: 18px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+}
+
+/* ================= TITLES ================= */
+.container h1 {
+  margin-bottom: 6px;
+}
+
+.subtitle {
+  font-size: 14px;
+  opacity: 0.75;
+  margin-bottom: 22px;
+}
+
+/* ================= FORM ================= */
+label {
+  display: block;
+  margin-top: 14px;
+  margin-bottom: 6px;
+  font-size: 14px;
+}
+
+input,
+select {
+  width: 100%;
+  padding: 12px;
+  border-radius: 10px;
+  border: none;
+  outline: none;
+  background: rgba(255, 255, 255, 0.95);
+  color: #000;
+  font-size: 14px;
+}
+
+/* ================= BUTTONS ================= */
+.btn {
+  width: 100%;
+  margin-top: 22px;
+  padding: 12px;
+  border-radius: 30px;
+  border: none;
+  font-weight: bold;
+  font-size: 15px;
+  cursor: pointer;
+  background: linear-gradient(to right, #00c6ff, #00ff99);
+  color: #000;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 20px rgba(0, 255, 153, 0.4);
+}
+
+.btn-outline {
+  background: transparent;
+  border: 1px solid #00c6ff;
+  color: #ffffff;
+  padding: 8px 16px;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.btn-outline:hover {
+  background: rgba(0, 198, 255, 0.15);
+}
+
+/* ================= CREATE ACCOUNT SECTION ================= */
+.create-account {
+  margin-top: 18px;
+  text-align: center;
+}
+
+.create-account p {
+  margin-bottom: 8px;
+  font-size: 14px;
+}
+
+/* ================= MESSAGE TEXT ================= */
+.message {
+  margin-top: 14px;
+  font-size: 14px;
+}
+
+/* ================= FOOTER ================= */
+.footer {
+  text-align: center;
+  padding: 20px;
+  font-size: 13px;
+  opacity: 0.6;
+}
+
+/* ================= RESPONSIVE ================= */
+@media (max-width: 480px) {
+  .header {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .container {
+    padding: 24px;
+  }
+}

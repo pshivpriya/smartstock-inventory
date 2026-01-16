@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>SmartStock Admin Dashboard</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+body{
+  margin:0;
+  font-family:"Segoe UI",sans-serif;
+  background:linear-gradient(135deg,#0f172a,#020617);
+  color:#e5e7eb;
+}
+header{
+  padding:20px 40px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  background:rgba(15,23,42,.9);
+}
+.logout-btn{
+  background:#ef4444;
+  color:white;
+  border:none;
+  padding:8px 18px;
+  border-radius:999px;
+  cursor:pointer;
+  font-weight:bold;
+}
+.cards{
+  padding:40px;
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+  gap:24px;
+}
+.card{
+  background:rgba(255,255,255,.08);
+  backdrop-filter:blur(16px);
+  border-radius:18px;
+  padding:28px;
+  cursor:pointer;
+  transition:.2s;
+}
+.card:hover{ transform:translateY(-4px); }
+.blue{color:#38bdf8}
+.red{color:#f87171}
+.green{color:#4ade80}
+
+.low-stock-alert{
+  background:#ef4444;
+  color:white;
+  padding:12px;
+  text-align:center;
+  font-weight:bold;
+  display:none;
+  animation:blink 1s infinite;
+}
+@keyframes blink{ 50%{opacity:.75} }
+</style>
+</head>
+
+<body>
+
+<header>
+  <h2>📊 SmartStock Admin Dashboard</h2>
+
+  <!-- 🔝 HEADER ACTIONS -->
+  <div style="display:flex;align-items:center;gap:14px;">
+
+    <!-- 🔔 LOW STOCK BELL -->
+    <div id="bell" onclick="toggleLowStockPopup()"
+         style="cursor:pointer;position:relative;font-size:20px;">
+      🔔
+      <span id="bellCount"
+        style="position:absolute;top:-8px;right:-10px;
+        background:red;color:white;border-radius:50%;
+        padding:2px 7px;font-size:12px;display:none;">0</span>
+    </div>
+
+    <!-- 👤 REGISTER EMPLOYEE -->
+    <button
+      onclick="goRegisterEmployee()"
+      style="
+        background:#22c55e;
+        color:#022c22;
+        border:none;
+        padding:8px 16px;
+        border-radius:999px;
+        cursor:pointer;
+        font-weight:bold;
+      ">
+      👤 Register Employee
+    </button>
+
+    <!-- 🚪 LOGOUT -->
+    <button class="logout-btn" onclick="logout()">Logout</button>
+  </div>
+</header>
+
+<div id="lowStockAlert" class="low-stock-alert">
+  ⚠️ Low Stock Alert! Please restock immediately.
+</div>
+
+<div id="lowStockPopup"
+  style="display:none;position:fixed;top:90px;right:40px;
+  background:#020617;border-radius:12px;
+  padding:20px;width:320px;
+  box-shadow:0 0 25px rgba(0,0,0,.6);z-index:999;">
+  <h3>⚠️ Low Stock Products</h3>
+  <ul id="lowStockList"></ul>
+</div>
+
+<div class="cards">
+
+  <div class="card" onclick="goProducts()">
+    <h3>Total Products</h3>
+    <h1 class="blue" id="totalProducts">0</h1>
+  </div>
+
+  <div class="card" onclick="goLowStock()">
+    <h3>Low Stock Items</h3>
+    <h1 class="red" id="lowStock">0</h1>
+  </div>
+
+  <div class="card">
+    <h3>Inventory Value</h3>
+    <h1 class="green">₹<span id="inventoryValue">0</span></h1>
+  </div>
+
+  <div class="card" onclick="goAddProduct()">
+    <h3>Add Product</h3>
+    <h1 class="green">＋</h1>
+  </div>
+
+  <div class="card" onclick="goTransactions()">
+    <h3>Stock Transactions</h3>
+    <h1>🔄</h1>
+  </div>
+
+  <div class="card" onclick="goManageUsers()">
+    <h3>Manage Users</h3>
+    <h1 class="blue">👥</h1>
+  </div>
+
+  <div class="card" onclick="goReports()">
+    <h3>Reports & Export</h3>
+    <h1>📑</h1>
+  </div>
+
+</div>
+
+<script>
+const BASE_URL = "http://127.0.0.1:5000";
+
+/* 🔐 ADMIN AUTH (STANDARDIZED) */
+if(
+  localStorage.getItem("loggedIn") !== "true" ||
+  localStorage.getItem("role") !== "admin"
+){
+  location.href = "/admin/login";
+}
+
+/* TOTAL PRODUCTS */
+fetch(`${BASE_URL}/api/products`)
+.then(r=>r.json())
+.then(d=>{
+  document.getElementById("totalProducts").innerText = d.length;
+});
+
+/* INVENTORY VALUE */
+fetch(`${BASE_URL}/inventory-value`)
+.then(r=>r.json())
+.then(d=>{
+  document.getElementById("inventoryValue").innerText =
+    Number(d.inventoryValue || 0).toLocaleString("en-IN");
+});
+
+/* LOW STOCK */
+fetch(`${BASE_URL}/low-stock`)
+.then(r=>r.json())
+.then(d=>{
+  document.getElementById("lowStock").innerText = d.count;
+
+  if(d.count>0){
+    document.getElementById("lowStockAlert").style.display="block";
+    document.getElementById("bellCount").style.display="inline";
+    document.getElementById("bellCount").innerText=d.count;
+
+    const list=document.getElementById("lowStockList");
+    list.innerHTML="";
+    d.items.forEach(p=>{
+      const li=document.createElement("li");
+      li.textContent=`${p.name} — Qty: ${p.quantity} (Limit: ${p.lowStock})`;
+      list.appendChild(li);
+    });
+  }
+});
+
+/* POPUP */
+function toggleLowStockPopup(){
+  const p=document.getElementById("lowStockPopup");
+  p.style.display=p.style.display==="block"?"none":"block";
+}
+
+/* NAVIGATION */
+function goProducts(){ location.href="/products"; }
+function goAddProduct(){ location.href="/add/product"; }
+function goTransactions(){ location.href="/transactions"; }
+function goManageUsers(){ location.href="/manage/users"; }
+function goLowStock(){ location.href="/products?filter=low"; }
+function goReports(){ location.href="/reports"; }
+function goRegisterEmployee(){ location.href="/register/employee"; }
+
+function logout(){
+  localStorage.clear();
+  location.href = FRONTEND_BASE + "/login";
+
+}
+
+</script>
+
+</body>
+</html>
