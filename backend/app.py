@@ -39,7 +39,7 @@ ADMIN_EMAIL = "pentishivapriya@gmail.com"
 # =====================================================
 @app.route("/")
 def home():
-    return render_template("admin-login.html")
+    return render_template("login.html")
 
 
 # =====================================================
@@ -47,7 +47,7 @@ def home():
 # =====================================================
 @app.route("/admin/login")
 def admin_login_page():
-    return render_template("admin-login.html")
+    return render_template("login.html")
 
 @app.route("/admin/dashboard")
 def admin_dashboard_page():
@@ -72,7 +72,7 @@ def login_page():
 
 @app.route("/employee/login")
 def employee_login_page():
-    return render_template("employee-login.html")
+    return render_template("login.html")
 
 @app.route("/employee/dashboard")
 def employee_dashboard():
@@ -94,7 +94,7 @@ def register_employee_page():
 def admin_signup_page():
     admin = users.find_one({"role": "admin"})
     if admin:
-        return render_template("admin-login.html")
+        return render_template("login.html")
     return render_template("admin-signup.html")
 
 def send_low_stock_email(product_name, quantity, low_stock):
