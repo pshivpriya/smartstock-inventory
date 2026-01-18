@@ -8,117 +8,380 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <style>
-body{
-  margin:0;
-  font-family:"Segoe UI",sans-serif;
-  background:linear-gradient(135deg,#020617,#0f172a);
-  color:#e5e7eb;
-}
-header{
-  padding:20px 40px;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-}
-button{
-  border:none;
-  padding:10px 20px;
-  border-radius:999px;
-  cursor:pointer;
-  font-weight:bold;
-}
-.back-btn{background:#38bdf8;color:#020617}
-.export-btn{background:#22c55e;color:#022c22;margin-right:10px}
-
-.card{
-  background:rgba(255,255,255,.08);
-  border-radius:18px;
-  padding:24px;
-  margin:30px;
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-/* ✅ CHART SIZE CONTROL */
-.chart-wrapper{
-  width:600px;
-  height:400px;
-  margin:0 auto;
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  min-height: 100vh;
+  color: #1e293b;
 }
 
-table{
-  width:100%;
-  border-collapse:collapse;
+/* Header */
+header {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  padding: 20px 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  position: sticky;
+  top: 0;
+  z-index: 100;
 }
-th,td{
-  padding:14px;
-  text-align:center;
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
 }
-th{background:rgba(255,255,255,.12)}
+
+.header-left h2 {
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.header-actions {
+  display: flex;
+  gap: 12px;
+}
+
+button {
+  padding: 12px 24px;
+  border-radius: 12px;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+}
+
+.dashboard-btn {
+  background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+  color: white;
+}
+
+.export-btn {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: white;
+}
+
+/* Container */
+.container {
+  padding: 40px;
+  max-width: 1600px;
+  margin: 0 auto;
+}
+
+/* Card */
+.card {
+  background: white;
+  border-radius: 20px;
+  padding: 32px;
+  margin-bottom: 32px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.card h3 {
+  font-size: 22px;
+  font-weight: 700;
+  color: #1e293b;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.export-buttons {
+  display: flex;
+  gap: 12px;
+}
+
+/* Chart Wrapper */
+.chart-wrapper {
+  max-width: 900px;
+  height: 400px;
+  margin: 0 auto;
+  position: relative;
+}
+
+/* Charts Grid */
+.charts-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+  gap: 32px;
+  margin-bottom: 32px;
+}
+
+/* Table */
+.table-wrapper {
+  overflow-x: auto;
+  border-radius: 12px;
+  max-height: 500px;
+  overflow-y: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+thead {
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+  position: sticky;
+  top: 0;
+}
+
+th {
+  padding: 16px;
+  text-align: left;
+  font-weight: 700;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #64748b;
+  border-bottom: 2px solid #e2e8f0;
+}
+
+th.text-right {
+  text-align: right;
+}
+
+td {
+  padding: 16px;
+  border-bottom: 1px solid #f1f5f9;
+  font-size: 14px;
+  color: #475569;
+}
+
+td.text-right {
+  text-align: right;
+  font-weight: 600;
+}
+
+tbody tr {
+  transition: all 0.2s ease;
+}
+
+tbody tr:hover {
+  background: #f8fafc;
+}
+
+/* Empty State */
+.empty-state {
+  text-align: center;
+  padding: 60px 20px;
+  color: #94a3b8;
+}
+
+.empty-icon {
+  font-size: 48px;
+  margin-bottom: 16px;
+  opacity: 0.5;
+}
+
+/* Loading */
+.loading {
+  text-align: center;
+  padding: 40px;
+}
+
+.spinner {
+  border: 3px solid #e2e8f0;
+  border-top: 3px solid #3b82f6;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 16px;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  header {
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .container {
+    padding: 20px;
+  }
+
+  .card {
+    padding: 20px;
+  }
+
+  .card-header {
+    flex-direction: column;
+    gap: 16px;
+    align-items: flex-start;
+  }
+
+  .charts-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .chart-wrapper {
+    height: 300px;
+  }
+}
 </style>
 </head>
 
 <body>
 
+<!-- Header -->
 <header>
-  <h2>📊 Reports & Export</h2>
-  <button class="back-btn" onclick="location.href='/admin/dashboard'">← Dashboard</button>
+  <div class="header-left">
+    <span style="font-size: 32px;">📊</span>
+    <h2>Reports & Export</h2>
+  </div>
+  <div class="header-actions">
+    <button class="dashboard-btn" onclick="goDashboard()">
+      <span>📊</span>
+      <span>Dashboard</span>
+    </button>
+  </div>
 </header>
 
-<!-- INVENTORY SUMMARY -->
-<div class="card">
-  <h3>📦 Inventory Summary</h3>
+<!-- Container -->
+<div class="container">
 
-  <button class="export-btn" onclick="exportCSV()">⬇ Export CSV</button>
-  <button class="export-btn" onclick="exportPDF()">⬇ Export PDF</button>
+  <!-- Inventory Summary Table -->
+  <div class="card">
+    <div class="card-header">
+      <h3>📦 Inventory Summary</h3>
+      <div class="export-buttons">
+        <button class="export-btn" onclick="exportCSV()">
+          <span>⬇️</span>
+          <span>Export CSV</span>
+        </button>
+      </div>
+    </div>
 
-  <table>
-    <thead>
-      <tr>
-        <th>Product</th>
-        <th>Category</th>
-        <th>Supplier</th>
-        <th>Quantity</th>
-        <th>Value (₹)</th>
-      </tr>
-    </thead>
-    <tbody id="summaryTable"></tbody>
-  </table>
-</div>
-
-<!-- 📊 STOCK QUANTITY CHART -->
-<div class="card">
-  <h3>📊 Stock Quantity Chart</h3>
-  <div class="chart-wrapper">
-    <canvas id="qtyChart"></canvas>
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>Product Name</th>
+            <th>Category</th>
+            <th>Supplier</th>
+            <th class="text-right">Quantity</th>
+            <th class="text-right">Cost Price</th>
+            <th class="text-right">Total Value</th>
+          </tr>
+        </thead>
+        <tbody id="summaryTable">
+          <tr>
+            <td colspan="6" class="loading">
+              <div class="spinner"></div>
+              <div>Loading inventory data...</div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
-</div>
 
-<!-- 💰 INVENTORY VALUE CHART -->
-<div class="card">
-  <h3>💰 Inventory Value Chart</h3>
-  <div class="chart-wrapper">
-    <canvas id="valueChart"></canvas>
+  <!-- Charts Grid -->
+  <div class="charts-grid">
+    
+    <!-- Stock Quantity Chart -->
+    <div class="card">
+      <h3>📊 Stock Quantity Overview</h3>
+      <div class="chart-wrapper">
+        <canvas id="quantityChart"></canvas>
+      </div>
+    </div>
+
+    <!-- Inventory Value Chart -->
+    <div class="card">
+      <h3>💰 Inventory Value Distribution</h3>
+      <div class="chart-wrapper">
+        <canvas id="valueChart"></canvas>
+      </div>
+    </div>
+
   </div>
+
+  <!-- Category Analysis -->
+  <div class="card">
+    <h3>📑 Category-wise Analysis</h3>
+    <div class="chart-wrapper" style="height: 350px;">
+      <canvas id="categoryChart"></canvas>
+    </div>
+  </div>
+
 </div>
 
 <script>
 const BASE_URL = "http://127.0.0.1:5000";
 
-/* LOAD INVENTORY + CHART DATA */
-fetch(`${BASE_URL}/api/products`)
-.then(res => res.json())
-.then(products => {
+// Load and Display Data
+async function loadReports() {
+  try {
+    const res = await fetch(`${BASE_URL}/api/products`, { credentials: "include" });
+    
+    if (!res.ok) {
+      throw new Error("Failed to load products");
+    }
 
+    const products = await res.json();
+    
+    if (products.length === 0) {
+      document.getElementById("summaryTable").innerHTML = 
+        `<tr><td colspan="6" class="empty-state">
+          <div class="empty-icon">📦</div>
+          <div>No inventory data available</div>
+        </td></tr>`;
+      return;
+    }
+
+    // Populate Table
+    populateTable(products);
+    
+    // Create Charts
+    createQuantityChart(products);
+    createValueChart(products);
+    createCategoryChart(products);
+
+  } catch (error) {
+    console.error("Error loading reports:", error);
+    document.getElementById("summaryTable").innerHTML = 
+      `<tr><td colspan="6" class="empty-state">
+        <div class="empty-icon">⚠️</div>
+        <div>Failed to load inventory data</div>
+      </td></tr>`;
+  }
+}
+
+// Populate Table
+function populateTable(products) {
   const table = document.getElementById("summaryTable");
   table.innerHTML = "";
-
-  let labels = [];
-  let qtyData = [];
-  let valueData = [];
-
-  if(products.length === 0){
-    table.innerHTML = `<tr><td colspan="5">No data available</td></tr>`;
-    return;
-  }
 
   products.forEach(p => {
     const qty = Number(p.quantity) || 0;
@@ -127,70 +390,227 @@ fetch(`${BASE_URL}/api/products`)
 
     table.innerHTML += `
       <tr>
-        <td>${p.name}</td>
+        <td><strong>${p.name}</strong></td>
         <td>${p.category}</td>
         <td>${p.supplier}</td>
-        <td>${qty}</td>
-        <td>₹${value.toLocaleString("en-IN")}</td>
-      </tr>
-    `;
-
-    labels.push(p.name);
-    qtyData.push(qty);
-    valueData.push(value);
+        <td class="text-right">${qty.toLocaleString()}</td>
+        <td class="text-right">₹${cost.toLocaleString("en-IN")}</td>
+        <td class="text-right">₹${value.toLocaleString("en-IN")}</td>
+      </tr>`;
   });
+}
 
-  /* 📊 STOCK QUANTITY CHART */
-  new Chart(document.getElementById("qtyChart"), {
+// Create Quantity Chart
+function createQuantityChart(products) {
+  // Take top 10 products by quantity
+  const sortedProducts = products
+    .sort((a, b) => Number(b.quantity) - Number(a.quantity))
+    .slice(0, 10);
+
+  const labels = sortedProducts.map(p => p.name);
+  const data = sortedProducts.map(p => Number(p.quantity));
+
+  new Chart(document.getElementById("quantityChart"), {
     type: "bar",
     data: {
       labels,
       datasets: [{
         label: "Quantity",
-        data: qtyData,
-        backgroundColor: "#38bdf8"
+        data,
+        backgroundColor: "rgba(59, 130, 246, 0.8)",
+        borderColor: "rgba(59, 130, 246, 1)",
+        borderWidth: 2,
+        borderRadius: 8
       }]
     },
     options: {
       responsive: true,
       maintainAspectRatio: false,
-      plugins:{
-        legend:{ display:false }
-      }
-    }
-  });
-
-  /* 💰 INVENTORY VALUE CHART */
-  new Chart(document.getElementById("valueChart"), {
-    type: "pie",
-    data: {
-      labels,
-      datasets: [{
-        label: "Value",
-        data: valueData
-      }]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins:{
-        legend:{
-          position:"bottom",
-          labels:{ boxWidth:12, font:{ size:10 } }
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          backgroundColor: "rgba(0, 0, 0, 0.8)",
+          padding: 12,
+          titleFont: { size: 14 },
+          bodyFont: { size: 13 }
+        }
+      },
+      scales: {
+        y: {
+          beginAtZero: true,
+          grid: { color: "rgba(0, 0, 0, 0.05)" }
+        },
+        x: {
+          grid: { display: false }
         }
       }
     }
   });
+}
 
-});
+// Create Value Chart
+function createValueChart(products) {
+  // Take top 8 products by value
+  const sortedProducts = products
+    .map(p => ({
+      ...p,
+      value: Number(p.quantity) * Number(p.costPrice)
+    }))
+    .sort((a, b) => b.value - a.value)
+    .slice(0, 8);
 
-/* EXPORTS */
-function exportCSV(){
+  const labels = sortedProducts.map(p => p.name);
+  const data = sortedProducts.map(p => p.value);
+
+  new Chart(document.getElementById("valueChart"), {
+    type: "doughnut",
+    data: {
+      labels,
+      datasets: [{
+        data,
+        backgroundColor: [
+          "rgba(59, 130, 246, 0.8)",
+          "rgba(16, 185, 129, 0.8)",
+          "rgba(249, 115, 22, 0.8)",
+          "rgba(139, 92, 246, 0.8)",
+          "rgba(236, 72, 153, 0.8)",
+          "rgba(34, 197, 94, 0.8)",
+          "rgba(251, 191, 36, 0.8)",
+          "rgba(239, 68, 68, 0.8)"
+        ],
+        borderWidth: 2,
+        borderColor: "#fff"
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          position: "right",
+          labels: {
+            boxWidth: 12,
+            font: { size: 11 },
+            padding: 10
+          }
+        },
+        tooltip: {
+          backgroundColor: "rgba(0, 0, 0, 0.8)",
+          padding: 12,
+          callbacks: {
+            label: function(context) {
+              return ` ${context.label}: ₹${context.parsed.toLocaleString("en-IN")}`;
+            }
+          }
+        }
+      }
+    }
+  });
+}
+
+// Create Category Chart
+function createCategoryChart(products) {
+  // Group by category
+  const categoryData = {};
+  
+  products.forEach(p => {
+    const category = p.category;
+    if (!categoryData[category]) {
+      categoryData[category] = { count: 0, value: 0 };
+    }
+    categoryData[category].count++;
+    categoryData[category].value += Number(p.quantity) * Number(p.costPrice);
+  });
+
+  const labels = Object.keys(categoryData);
+  const counts = labels.map(cat => categoryData[cat].count);
+  const values = labels.map(cat => categoryData[cat].value);
+
+  new Chart(document.getElementById("categoryChart"), {
+    type: "bar",
+    data: {
+      labels,
+      datasets: [
+        {
+          label: "Product Count",
+          data: counts,
+          backgroundColor: "rgba(59, 130, 246, 0.8)",
+          borderColor: "rgba(59, 130, 246, 1)",
+          borderWidth: 2,
+          borderRadius: 8,
+          yAxisID: "y"
+        },
+        {
+          label: "Total Value (₹)",
+          data: values,
+          backgroundColor: "rgba(16, 185, 129, 0.8)",
+          borderColor: "rgba(16, 185, 129, 1)",
+          borderWidth: 2,
+          borderRadius: 8,
+          yAxisID: "y1"
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      interaction: {
+        mode: "index",
+        intersect: false
+      },
+      plugins: {
+        legend: {
+          position: "top",
+          labels: { font: { size: 12 }, padding: 15 }
+        },
+        tooltip: {
+          backgroundColor: "rgba(0, 0, 0, 0.8)",
+          padding: 12
+        }
+      },
+      scales: {
+        y: {
+          type: "linear",
+          display: true,
+          position: "left",
+          title: {
+            display: true,
+            text: "Product Count",
+            font: { weight: "bold" }
+          },
+          grid: { color: "rgba(0, 0, 0, 0.05)" }
+        },
+        y1: {
+          type: "linear",
+          display: true,
+          position: "right",
+          title: {
+            display: true,
+            text: "Total Value (₹)",
+            font: { weight: "bold" }
+          },
+          grid: { drawOnChartArea: false }
+        },
+        x: {
+          grid: { display: false }
+        }
+      }
+    }
+  });
+}
+
+// Export CSV
+function exportCSV() {
   window.open(`${BASE_URL}/export/inventory-csv`, "_blank");
 }
-function exportPDF(){
-  window.open(`${BASE_URL}/export/inventory-pdf`, "_blank");
+
+// Navigation
+function goDashboard() {
+  window.location.href = "/admin/dashboard";
 }
+
+// Initialize
+loadReports();
 </script>
 
 </body>

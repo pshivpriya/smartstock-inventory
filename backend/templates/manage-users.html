@@ -6,214 +6,650 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
-body{
-  margin:0;
-  font-family:"Segoe UI",sans-serif;
-  background:linear-gradient(135deg,#0f172a,#020617);
-  color:#e5e7eb
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
-header{
-  padding:20px 40px;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  background:rgba(15,23,42,.9)
-}
-button{
-  padding:8px 16px;
-  border-radius:999px;
-  border:none;
-  font-weight:bold;
-  cursor:pointer
-}
-.dashboard-btn{background:#38bdf8;color:#020617}
-.logout-btn{background:#ef4444;color:white}
 
-.container{padding:40px}
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  min-height: 100vh;
+  color: #1e293b;
+}
 
-table{
-  width:100%;
-  border-collapse:collapse;
-  background:rgba(255,255,255,.08);
-  border-radius:12px;
-  overflow:hidden
+/* Header */
+header {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  padding: 20px 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  position: sticky;
+  top: 0;
+  z-index: 100;
 }
-th,td{
-  padding:14px;
-  text-align:center;
-  border-bottom:1px solid rgba(255,255,255,.1)
-}
-th{background:rgba(255,255,255,.12)}
 
-.admin{color:#22c55e;font-weight:bold}
-.employee{color:#facc15;font-weight:bold}
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
 
-.promote-btn{
-  background:#22c55e;
-  color:#020617;
-  margin-right:8px
+.header-left h2 {
+  font-size: 24px;
+  font-weight: 700;
 }
-.demote-btn{
-  background:#facc15;
-  color:#020617;
-  margin-right:8px
+
+.header-actions {
+  display: flex;
+  gap: 12px;
 }
-.delete-btn{
-  background:#ef4444;
-  color:white
+
+button {
+  padding: 12px 24px;
+  border-radius: 12px;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
-.empty{
-  text-align:center;
-  opacity:.7;
-  padding:30px
+
+button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+}
+
+button:active {
+  transform: translateY(0);
+}
+
+.dashboard-btn {
+  background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+  color: white;
+}
+
+.logout-btn {
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+  color: white;
+}
+
+/* Container */
+.container {
+  padding: 40px;
+  max-width: 1600px;
+  margin: 0 auto;
+}
+
+/* Stats Summary */
+.stats-summary {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.stat-box {
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+}
+
+.stat-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 8px;
+}
+
+.stat-value {
+  font-size: 28px;
+  font-weight: 700;
+  background: linear-gradient(90deg, var(--color-start), var(--color-end));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.stat-box.blue {
+  --color-start: #3b82f6;
+  --color-end: #1d4ed8;
+}
+
+.stat-box.green {
+  --color-start: #10b981;
+  --color-end: #059669;
+}
+
+.stat-box.yellow {
+  --color-start: #f59e0b;
+  --color-end: #d97706;
+}
+
+/* Table Wrapper */
+.table-wrapper {
+  background: white;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+thead {
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+}
+
+th {
+  padding: 18px 16px;
+  text-align: left;
+  font-weight: 700;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #64748b;
+  border-bottom: 2px solid #e2e8f0;
+}
+
+th.text-center {
+  text-align: center;
+}
+
+td {
+  padding: 18px 16px;
+  border-bottom: 1px solid #f1f5f9;
+  font-size: 14px;
+  color: #475569;
+}
+
+td.text-center {
+  text-align: center;
+}
+
+tbody tr {
+  transition: all 0.2s ease;
+}
+
+tbody tr:hover {
+  background: #f8fafc;
+}
+
+/* User Name */
+.user-name {
+  font-weight: 600;
+  color: #1e293b;
+}
+
+/* Role Badges */
+.role-badge {
+  display: inline-block;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-weight: 700;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.role-admin {
+  background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+  color: #065f46;
+}
+
+.role-employee {
+  background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+  color: #92400e;
+}
+
+/* Action Buttons */
+.action-buttons {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+}
+
+.promote-btn {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: white;
+  padding: 8px 16px;
+  font-size: 13px;
+}
+
+.demote-btn {
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+  color: white;
+  padding: 8px 16px;
+  font-size: 13px;
+}
+
+.delete-btn {
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+  color: white;
+  padding: 8px 16px;
+  font-size: 13px;
+}
+
+.no-actions {
+  color: #94a3b8;
+  font-style: italic;
+  font-size: 14px;
+}
+
+/* Empty State */
+.empty-state {
+  text-align: center;
+  padding: 80px 20px;
+}
+
+.empty-icon {
+  font-size: 64px;
+  margin-bottom: 16px;
+  opacity: 0.5;
+}
+
+.empty-text {
+  font-size: 18px;
+  font-weight: 600;
+  color: #64748b;
+}
+
+/* Loading */
+.loading-row {
+  text-align: center;
+  padding: 60px;
+}
+
+.spinner {
+  border: 3px solid #e2e8f0;
+  border-top: 3px solid #3b82f6;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 16px;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Notifications */
+.notification {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  padding: 16px 24px;
+  border-radius: 12px;
+  font-weight: 600;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  animation: slideIn 0.3s ease;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  max-width: 400px;
+}
+
+@keyframes slideIn {
+  from { transform: translateX(400px); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+
+.notification.success {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: white;
+}
+
+.notification.error {
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+  color: white;
+}
+
+.notification.warning {
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+  color: white;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  header {
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .container {
+    padding: 20px;
+  }
+
+  .table-wrapper {
+    overflow-x: auto;
+  }
+
+  table {
+    min-width: 700px;
+  }
+
+  .action-buttons {
+    flex-direction: column;
+    gap: 4px;
+  }
 }
 </style>
 </head>
 
 <body>
 
+<!-- Header -->
 <header>
-  <h2>👥 Manage Users</h2>
-  <div>
-    <button class="dashboard-btn" onclick="goDashboard()">Dashboard</button>
-    <button class="logout-btn" onclick="logout()">Logout</button>
+  <div class="header-left">
+    <span style="font-size: 32px;">👥</span>
+    <h2>Manage Users</h2>
+  </div>
+  <div class="header-actions">
+    <button class="dashboard-btn" onclick="goDashboard()">
+      <span>📊</span>
+      <span>Dashboard</span>
+    </button>
+    <button class="logout-btn" onclick="logout()">
+      <span>🚪</span>
+      <span>Logout</span>
+    </button>
   </div>
 </header>
 
+<!-- Container -->
 <div class="container">
-<table>
-<thead>
-<tr>
-  <th>Name</th>
-  <th>Email</th>
-  <th>Role</th>
-  <th>Actions</th>
-</tr>
-</thead>
-<tbody id="table"></tbody>
-</table>
+
+  <!-- Stats Summary -->
+  <div class="stats-summary">
+    <div class="stat-box blue">
+      <div class="stat-label">Total Users</div>
+      <div class="stat-value" id="totalUsers">—</div>
+    </div>
+    <div class="stat-box green">
+      <div class="stat-label">Administrators</div>
+      <div class="stat-value" id="adminCount">—</div>
+    </div>
+    <div class="stat-box yellow">
+      <div class="stat-label">Employees</div>
+      <div class="stat-value" id="employeeCount">—</div>
+    </div>
+  </div>
+
+  <!-- Table -->
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr>
+          <th>User Name</th>
+          <th>Email Address</th>
+          <th class="text-center">Role</th>
+          <th class="text-center">Actions</th>
+        </tr>
+      </thead>
+      <tbody id="userTable">
+        <tr>
+          <td colspan="4" class="loading-row">
+            <div class="spinner"></div>
+            <div>Loading users...</div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
 </div>
 
 <script>
 const BASE_URL = "http://127.0.0.1:5000";
-const currentUser = localStorage.getItem("userEmail");
+let currentUserEmail = null;
+let allUsers = [];
 
-/* 🔐 ADMIN GUARD */
-if (
-  localStorage.getItem("adminLoggedIn") !== "true" ||
-  localStorage.getItem("role") !== "admin" ||
-  !currentUser
-) {
-  location.href = "/admin/login";
+// Show notification
+function showNotification(message, type = "success") {
+  const notification = document.createElement("div");
+  notification.className = `notification ${type}`;
+  
+  const icon = type === "success" ? "✅" : type === "error" ? "❌" : "⚠️";
+  notification.innerHTML = `<span>${icon}</span><span>${message}</span>`;
+  
+  document.body.appendChild(notification);
+
+  setTimeout(() => {
+    notification.style.animation = "slideIn 0.3s ease reverse";
+    setTimeout(() => notification.remove(), 300);
+  }, 4000);
 }
 
-/* 👥 LOAD USERS */
-function loadUsers(){
-  fetch(`${BASE_URL}/users`)
-    .then(res => res.json())
-    .then(users => {
-      const table = document.getElementById("table");
-      table.innerHTML = "";
+// Fetch current user
+async function getCurrentUser() {
+  try {
+    const res = await fetch(`${BASE_URL}/me`, { credentials: "include" });
+    if (!res.ok) {
+      return false;
+    }
 
-      if(!Array.isArray(users) || users.length === 0){
-        table.innerHTML =
-          `<tr><td colspan="4" class="empty">No users found</td></tr>`;
-        return;
+    const data = await res.json();
+    currentUserEmail = data.email;
+    console.log("Current user:", currentUserEmail);
+    return true;
+  } catch (error) {
+    console.error("Error fetching current user:", error);
+    return false;
+  }
+}
+
+// Update Stats
+function updateStats() {
+  const totalUsers = allUsers.length;
+  const adminCount = allUsers.filter(u => u.role === "admin").length;
+  const employeeCount = allUsers.filter(u => u.role === "employee").length;
+
+  document.getElementById("totalUsers").innerText = totalUsers;
+  document.getElementById("adminCount").innerText = adminCount;
+  document.getElementById("employeeCount").innerText = employeeCount;
+}
+
+// Load users
+async function loadUsers() {
+  try {
+    const res = await fetch(`${BASE_URL}/users`, { credentials: "include" });
+    
+    if (!res.ok) {
+      throw new Error("Failed to fetch users");
+    }
+
+    allUsers = await res.json();
+    updateStats();
+    displayUsers();
+
+  } catch (error) {
+    console.error("Error loading users:", error);
+    showNotification("Failed to load users", "error");
+    
+    const table = document.getElementById("userTable");
+    table.innerHTML = `
+      <tr>
+        <td colspan="4" class="empty-state">
+          <div class="empty-icon">⚠️</div>
+          <div class="empty-text">Failed to load users</div>
+        </td>
+      </tr>`;
+  }
+}
+
+// Display Users
+function displayUsers() {
+  const table = document.getElementById("userTable");
+  table.innerHTML = "";
+
+  if (allUsers.length === 0) {
+    table.innerHTML = `
+      <tr>
+        <td colspan="4" class="empty-state">
+          <div class="empty-icon">👤</div>
+          <div class="empty-text">No users found</div>
+        </td>
+      </tr>`;
+    return;
+  }
+
+  allUsers.forEach(u => {
+    const isCurrentUser = u.email === currentUserEmail;
+    
+    let actions = "";
+    
+    if (isCurrentUser) {
+      actions = `<span class="no-actions">— Current User —</span>`;
+    } else {
+      actions = '<div class="action-buttons">';
+      
+      if (u.role === "employee") {
+        actions += `<button class="promote-btn" onclick="promote('${u.email}')">⬆️ Promote</button>`;
+      } else {
+        actions += `<button class="demote-btn" onclick="demote('${u.email}')">⬇️ Demote</button>`;
       }
+      
+      actions += `<button class="delete-btn" onclick="deleteUser('${u.email}')">🗑️ Delete</button>`;
+      actions += '</div>';
+    }
 
-      users.forEach(u => {
-        table.innerHTML += `
-          <tr>
-            <td>${u.name}</td>
-            <td>${u.email}</td>
-            <td class="${u.role === "admin" ? "admin" : "employee"}">${u.role}</td>
-            <td>
-              ${
-                u.role === "employee"
-                ? `<button class="promote-btn" onclick="promote('${u.email}')">Promote</button>`
-                : (u.email !== currentUser
-                  ? `<button class="demote-btn" onclick="demote('${u.email}')">Demote</button>`
-                  : ``)
-              }
-              ${
-                u.email !== currentUser
-                ? `<button class="delete-btn" onclick="deleteUser('${u.email}')">Delete</button>`
-                : ``
-              }
-            </td>
-          </tr>`;
-      });
-    })
-    .catch(() => {
-      document.getElementById("table").innerHTML =
-        `<tr><td colspan="4" class="empty">Server error</td></tr>`;
+    const roleClass = u.role === "admin" ? "role-admin" : "role-employee";
+    
+    table.innerHTML += `
+      <tr>
+        <td class="user-name">${u.name}</td>
+        <td>${u.email}</td>
+        <td class="text-center">
+          <span class="role-badge ${roleClass}">${u.role}</span>
+        </td>
+        <td class="text-center">${actions}</td>
+      </tr>`;
+  });
+}
+
+// Promote user to admin
+async function promote(email) {
+  if (!confirm(`Are you sure you want to promote ${email} to Administrator?`)) {
+    return;
+  }
+
+  try {
+    const res = await fetch(`${BASE_URL}/promote`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+      body: JSON.stringify({ email })
+    });
+
+    const data = await res.json();
+
+    if (res.ok) {
+      showNotification("User promoted to Administrator!", "success");
+      loadUsers();
+    } else {
+      showNotification(data.error || "Failed to promote user", "error");
+    }
+  } catch (error) {
+    console.error("Error promoting user:", error);
+    showNotification("Server error. Please try again.", "error");
+  }
+}
+
+// Demote admin to employee
+async function demote(email) {
+  if (!confirm(`Are you sure you want to demote ${email} to Employee?`)) {
+    return;
+  }
+
+  try {
+    const res = await fetch(`${BASE_URL}/demote`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+      body: JSON.stringify({ email })
+    });
+
+    const data = await res.json();
+
+    if (res.ok) {
+      showNotification("Administrator demoted to Employee!", "success");
+      loadUsers();
+    } else {
+      showNotification(data.error || "Failed to demote user", "error");
+    }
+  } catch (error) {
+    console.error("Error demoting user:", error);
+    showNotification("Server error. Please try again.", "error");
+  }
+}
+
+// Delete user
+async function deleteUser(email) {
+  if (!confirm(`⚠️ Are you sure you want to delete ${email}?\n\nThis action cannot be undone!`)) {
+    return;
+  }
+
+  try {
+    const res = await fetch(`${BASE_URL}/delete-user`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+      body: JSON.stringify({ email })
+    });
+
+    const data = await res.json();
+
+    if (res.ok) {
+      showNotification("User deleted successfully!", "success");
+      loadUsers();
+    } else {
+      showNotification(data.error || "Failed to delete user", "error");
+    }
+  } catch (error) {
+    console.error("Error deleting user:", error);
+    showNotification("Server error. Please try again.", "error");
+  }
+}
+
+// Navigation
+function goDashboard() {
+  window.location.href = "/admin/dashboard";
+}
+
+function logout() {
+  fetch(`${BASE_URL}/logout`, { credentials: "include" })
+    .then(() => {
+      window.location.href = "/login-page";
     });
 }
 
-/* 🔼 PROMOTE */
-function promote(email){
-  if(!confirm("Promote this user to Admin?")) return;
-
-  fetch(`${BASE_URL}/promote`,{
-    method:"POST",
-    headers:{ "Content-Type":"application/json" },
-    body:JSON.stringify({ email })
-  })
-  .then(res=>res.json())
-  .then(data=>{
-    if(data.error) alert(data.error);
-    else loadUsers();
-  })
-  .catch(()=>alert("Server error"));
-}
-
-/* 🔽 DEMOTE */
-function demote(email){
-  if(!confirm("Demote this admin to Employee?")) return;
-
-  fetch(`${BASE_URL}/demote`,{
-    method:"POST",
-    headers:{ "Content-Type":"application/json" },
-    body:JSON.stringify({
-      email,
-      requester: currentUser
-    })
-  })
-  .then(res=>res.json())
-  .then(data=>{
-    if(data.error) alert(data.error);
-    else loadUsers();
-  })
-  .catch(()=>alert("Server error"));
-}
-
-/* ❌ DELETE */
-function deleteUser(email){
-  if(!confirm("Are you sure you want to delete this user?")) return;
-
-  fetch(`${BASE_URL}/delete-user`,{
-    method:"POST",
-    headers:{ "Content-Type":"application/json" },
-    body:JSON.stringify({
-      email,
-      requester: currentUser
-    })
-  })
-  .then(res=>res.json())
-  .then(data=>{
-    if(data.error) alert(data.error);
-    else loadUsers();
-  })
-  .catch(()=>alert("Server error"));
-}
-
-function goDashboard(){ location.href="/admin/dashboard"; }
-function logout(){
-  localStorage.clear();
-  location.href="/admin/login";
-}
-
-loadUsers();
+// Initialize
+(async () => {
+  const ok = await getCurrentUser();
+  
+  if (ok) {
+    await loadUsers();
+  } else {
+    showNotification("Please log in first", "warning");
+    setTimeout(() => {
+      window.location.href = "/login-page";
+    }, 2000);
+  }
+})();
 </script>
 
 </body>

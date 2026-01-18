@@ -6,161 +6,417 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
-body{
-  margin:0;
-  font-family:"Segoe UI",sans-serif;
-  background:linear-gradient(135deg,#020617,#0f172a);
-  color:#e5e7eb;
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
-header{
-  padding:20px 40px;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  background:rgba(15,23,42,.9);
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  min-height: 100vh;
+  color: #1e293b;
 }
-button{
-  padding:10px 18px;
-  border-radius:999px;
-  border:none;
-  font-weight:bold;
-  cursor:pointer;
+
+/* Header */
+header {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  padding: 20px 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  position: sticky;
+  top: 0;
+  z-index: 100;
 }
-.dashboard-btn{background:#38bdf8;color:#020617}
-.logout-btn{background:#ef4444;color:white}
-.main{
-  display:flex;
-  justify-content:center;
-  padding:60px 20px;
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
 }
-.card{
-  width:100%;
-  max-width:520px;
-  background:rgba(255,255,255,.07);
-  backdrop-filter:blur(18px);
-  border-radius:20px;
-  padding:40px;
+
+.header-left h2 {
+  font-size: 24px;
+  font-weight: 700;
 }
-.card h2{
-  margin-top:0;
-  text-align:center;
+
+.header-actions {
+  display: flex;
+  gap: 12px;
 }
-input{
-  width:100%;
-  padding:14px;
-  margin-bottom:16px;
-  border-radius:12px;
-  border:none;
-  background:#020617;
-  color:#e5e7eb;
+
+button {
+  padding: 12px 24px;
+  border-radius: 12px;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
-.primary{
-  width:100%;
-  padding:14px;
-  border-radius:999px;
-  background:linear-gradient(90deg,#0ea5e9,#22c55e);
-  font-size:15px;
+
+button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
 }
-.message{
-  margin-top:16px;
-  font-weight:bold;
-  text-align:center;
+
+.dashboard-btn {
+  background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+  color: white;
 }
-.note{
-  font-size:13px;
-  opacity:.8;
-  text-align:center;
-  margin-bottom:12px;
+
+.logout-btn {
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+  color: white;
+}
+
+/* Container */
+.container {
+  padding: 60px 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Form Card */
+.form-card {
+  width: 100%;
+  max-width: 550px;
+  background: white;
+  border-radius: 24px;
+  padding: 40px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+}
+
+.form-card h3 {
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  text-align: center;
+}
+
+.form-subtitle {
+  text-align: center;
+  color: #64748b;
+  margin-bottom: 32px;
+  font-size: 14px;
+}
+
+.info-box {
+  background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+  border-left: 4px solid #3b82f6;
+  padding: 16px;
+  border-radius: 12px;
+  margin-bottom: 24px;
+}
+
+.info-box-title {
+  font-weight: 700;
+  color: #1e40af;
+  margin-bottom: 4px;
+  font-size: 14px;
+}
+
+.info-box-text {
+  color: #1e40af;
+  font-size: 13px;
+}
+
+/* Form Groups */
+.form-group {
+  margin-bottom: 24px;
+}
+
+.form-group label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: #475569;
+  font-size: 14px;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 14px 16px;
+  border: 2px solid #e2e8f0;
+  border-radius: 12px;
+  font-size: 15px;
+  transition: all 0.3s ease;
+  font-family: inherit;
+  background: white;
+  color: #1e293b;
+}
+
+.form-group input:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.form-group input::placeholder {
+  color: #94a3b8;
+}
+
+/* Icon Input */
+.input-with-icon {
+  position: relative;
+}
+
+.input-icon {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 18px;
+}
+
+.input-with-icon input {
+  padding-left: 45px;
+}
+
+/* Password Toggle */
+.password-toggle {
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  font-size: 18px;
+  user-select: none;
+}
+
+/* Submit Button */
+.submit-btn {
+  width: 100%;
+  padding: 16px;
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: white;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 700;
+  margin-top: 12px;
+}
+
+.submit-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(16, 185, 129, 0.3);
+}
+
+/* Message */
+.message {
+  margin-top: 20px;
+  padding: 14px;
+  border-radius: 12px;
+  font-weight: 600;
+  text-align: center;
+  display: none;
+  animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.message.success {
+  background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+  color: #065f46;
+}
+
+.message.error {
+  background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+  color: #991b1b;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  header {
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .form-card {
+    padding: 30px 20px;
+  }
 }
 </style>
 </head>
 
 <body>
 
+<!-- Header -->
 <header>
-  <h2>👤 Register Employee</h2>
-  <div>
-    <button class="dashboard-btn" onclick="goDashboard()">Dashboard</button>
-    <button class="logout-btn" onclick="logout()">Logout</button>
+  <div class="header-left">
+    <span style="font-size: 32px;">👤</span>
+    <h2>Register Employee</h2>
+  </div>
+  <div class="header-actions">
+    <button class="dashboard-btn" onclick="goDashboard()">
+      <span>📊</span>
+      <span>Dashboard</span>
+    </button>
+    <button class="logout-btn" onclick="logout()">
+      <span>🚪</span>
+      <span>Logout</span>
+    </button>
   </div>
 </header>
 
-<main class="main">
-  <section class="card">
+<!-- Container -->
+<div class="container">
+  <div class="form-card">
+    <h3>Add New Employee</h3>
+    <p class="form-subtitle">Create a new employee account</p>
 
-    <h2>Add New Employee</h2>
-    <p class="note">Default password will be shared with employee</p>
+    <div class="info-box">
+      <div class="info-box-title">ℹ️ Important Information</div>
+      <div class="info-box-text">
+        The employee will receive these credentials to access the system.
+        Please ensure they change their password after first login.
+      </div>
+    </div>
 
-    <input id="name" placeholder="Employee Name">
-    <input id="email" type="email" placeholder="Employee Email">
-    <input id="password" type="password" placeholder="Temporary Password">
+    <form id="employeeForm" onsubmit="registerEmployee(event)">
+      
+      <div class="form-group">
+        <label for="name">Full Name *</label>
+        <div class="input-with-icon">
+          <span class="input-icon">👤</span>
+          <input type="text" id="name" placeholder="e.g., John Doe" required>
+        </div>
+      </div>
 
-    <button class="primary" onclick="registerEmployee()">
-      Register Employee
-    </button>
+      <div class="form-group">
+        <label for="email">Email Address *</label>
+        <div class="input-with-icon">
+          <span class="input-icon">📧</span>
+          <input type="email" id="email" placeholder="employee@company.com" required>
+        </div>
+      </div>
 
-    <div class="message" id="msg"></div>
+      <div class="form-group">
+        <label for="password">Temporary Password *</label>
+        <div class="input-with-icon">
+          <span class="input-icon">🔒</span>
+          <input type="password" id="password" placeholder="Create a secure password" minlength="6" required>
+          <span class="password-toggle" onclick="togglePassword()">👁️</span>
+        </div>
+      </div>
 
-  </section>
-</main>
+      <button type="submit" class="submit-btn">
+        ✅ Register Employee
+      </button>
+
+      <div id="message" class="message"></div>
+    </form>
+
+  </div>
+</div>
 
 <script>
 const BASE_URL = "http://127.0.0.1:5000";
 
-/* 🔐 ADMIN AUTH GUARD */
-if (localStorage.getItem("adminLoggedIn") !== "true") {
-  window.location.href = "/admin/login";
+// Toggle Password Visibility
+function togglePassword() {
+  const passwordInput = document.getElementById("password");
+  const toggleIcon = document.querySelector(".password-toggle");
+  
+  if (passwordInput.type === "password") {
+    passwordInput.type = "text";
+    toggleIcon.textContent = "🙈";
+  } else {
+    passwordInput.type = "password";
+    toggleIcon.textContent = "👁️";
+  }
 }
 
-function registerEmployee(){
+// Show Message
+function showMessage(text, type) {
+  const msg = document.getElementById("message");
+  msg.textContent = text;
+  msg.className = `message ${type}`;
+  msg.style.display = "block";
+
+  if (type === "success") {
+    setTimeout(() => {
+      msg.style.display = "none";
+    }, 5000);
+  }
+}
+
+// Register Employee
+async function registerEmployee(event) {
+  event.preventDefault();
+
   const name = document.getElementById("name").value.trim();
   const email = document.getElementById("email").value.trim();
   const password = document.getElementById("password").value;
-  const msg = document.getElementById("msg");
 
-  if(!name || !email || !password){
-    msg.style.color="#f87171";
-    msg.textContent="❌ Please fill all fields";
+  // Validation
+  if (!name || !email || !password) {
+    showMessage("❌ Please fill in all fields", "error");
     return;
   }
 
-  fetch(`${BASE_URL}/register`,{
-    method:"POST",
-    headers:{ "Content-Type":"application/json" },
-    body:JSON.stringify({
-      name,
-      email,
-      password,
-      role:"employee"
-    })
-  })
-  .then(res => res.json())
-  .then(data => {
-    if(data.error){
-      msg.style.color="#f87171";
-      msg.textContent="❌ " + data.error;
-    } else {
-      msg.style.color="#22c55e";
-      msg.textContent="✅ Employee registered successfully";
+  if (password.length < 6) {
+    showMessage("❌ Password must be at least 6 characters long", "error");
+    return;
+  }
 
-      document.getElementById("name").value="";
-      document.getElementById("email").value="";
-      document.getElementById("password").value="";
+  // Email validation
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(email)) {
+    showMessage("❌ Please enter a valid email address", "error");
+    return;
+  }
+
+  try {
+    const res = await fetch(`${BASE_URL}/register`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+      body: JSON.stringify({
+        name,
+        email,
+        password,
+        role: "employee"
+      })
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      throw new Error(data.error || "Failed to register employee");
     }
-  })
-  .catch(()=>{
-    msg.style.color="#f87171";
-    msg.textContent="❌ Server error";
-  });
+
+    showMessage("✅ Employee registered successfully!", "success");
+    
+    // Clear form
+    document.getElementById("employeeForm").reset();
+
+  } catch (error) {
+    console.error("Error registering employee:", error);
+    showMessage(`❌ ${error.message}`, "error");
+  }
 }
 
-function goDashboard(){
-  window.location.href="/admin/dashboard";
+// Navigation
+function goDashboard() {
+  window.location.href = "/admin/dashboard";
 }
 
-function logout(){
-  localStorage.removeItem("adminLoggedIn");
-  window.location.href="/admin/login";
+function logout() {
+  fetch(`${BASE_URL}/logout`, { credentials: "include" })
+    .then(() => {
+      window.location.href = "/login-page";
+    });
 }
 </script>
 

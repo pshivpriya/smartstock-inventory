@@ -6,147 +6,517 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
-body{
-  margin:0;
-  font-family:"Segoe UI",sans-serif;
-  background:#020617;
-  color:#e5e7eb;
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
-header{
-  padding:20px 40px;
-  display:flex;
-  justify-content:space-between;
-  background:#0f172a;
-}
-button{
-  padding:8px 18px;
-  border-radius:999px;
-  border:none;
-  font-weight:bold;
-  cursor:pointer;
-}
-.dashboard-btn{background:#38bdf8;color:#020617}
-.logout-btn{background:#ef4444;color:white}
 
-.container{padding:40px}
-table{
-  width:100%;
-  border-collapse:collapse;
-  background:rgba(255,255,255,.06);
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  min-height: 100vh;
+  color: #1e293b;
 }
-th,td{
-  padding:14px;
-  text-align:center;
-  border-bottom:1px solid rgba(255,255,255,.1);
+
+/* Header */
+header {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  padding: 20px 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  position: sticky;
+  top: 0;
+  z-index: 100;
 }
-.low{color:#f87171;font-weight:bold}
-.ok{color:#4ade80;font-weight:bold}
-.empty{opacity:.7;text-align:center;padding:30px}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.header-left h2 {
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.header-actions {
+  display: flex;
+  gap: 12px;
+}
+
+button {
+  padding: 12px 24px;
+  border-radius: 12px;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+}
+
+.dashboard-btn {
+  background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+  color: white;
+}
+
+.logout-btn {
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+  color: white;
+}
+
+/* Container */
+.container {
+  padding: 40px;
+  max-width: 1600px;
+  margin: 0 auto;
+}
+
+/* Filters */
+.filters {
+  background: white;
+  border-radius: 16px;
+  padding: 20px 24px;
+  margin-bottom: 24px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.filter-label {
+  font-weight: 600;
+  color: #64748b;
+}
+
+.filter-btn {
+  padding: 8px 16px;
+  background: #f1f5f9;
+  color: #475569;
+  border-radius: 8px;
+  font-size: 13px;
+}
+
+.filter-btn.active {
+  background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+  color: white;
+}
+
+/* Table Wrapper */
+.table-wrapper {
+  background: white;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+thead {
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+}
+
+th {
+  padding: 18px 16px;
+  text-align: left;
+  font-weight: 700;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #64748b;
+  border-bottom: 2px solid #e2e8f0;
+}
+
+th.text-center {
+  text-align: center;
+}
+
+td {
+  padding: 18px 16px;
+  border-bottom: 1px solid #f1f5f9;
+  font-size: 14px;
+  color: #475569;
+}
+
+td.text-center {
+  text-align: center;
+}
+
+tbody tr {
+  transition: all 0.2s ease;
+}
+
+tbody tr:hover {
+  background: #f8fafc;
+}
+
+/* Status Badges */
+.status-badge {
+  display: inline-block;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-weight: 700;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.status-low {
+  background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+  color: #991b1b;
+}
+
+.status-ok {
+  background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+  color: #065f46;
+}
+
+/* Product Name */
+.product-name {
+  font-weight: 600;
+  color: #1e293b;
+}
+
+/* Empty State */
+.empty-state {
+  text-align: center;
+  padding: 80px 20px;
+}
+
+.empty-icon {
+  font-size: 64px;
+  margin-bottom: 16px;
+  opacity: 0.5;
+}
+
+.empty-text {
+  font-size: 18px;
+  font-weight: 600;
+  color: #64748b;
+}
+
+/* Loading */
+.loading-row {
+  text-align: center;
+  padding: 60px;
+}
+
+.spinner {
+  border: 3px solid #e2e8f0;
+  border-top: 3px solid #3b82f6;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 16px;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Stats Summary */
+.stats-summary {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.stat-box {
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+}
+
+.stat-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 8px;
+}
+
+.stat-value {
+  font-size: 28px;
+  font-weight: 700;
+  background: linear-gradient(90deg, var(--color-start), var(--color-end));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.stat-box.blue {
+  --color-start: #3b82f6;
+  --color-end: #1d4ed8;
+}
+
+.stat-box.red {
+  --color-start: #ef4444;
+  --color-end: #dc2626;
+}
+
+.stat-box.green {
+  --color-start: #10b981;
+  --color-end: #059669;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  header {
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .container {
+    padding: 20px;
+  }
+
+  .table-wrapper {
+    overflow-x: auto;
+  }
+
+  table {
+    min-width: 800px;
+  }
+}
 </style>
 </head>
 
 <body>
 
+<!-- Header -->
 <header>
-  <h2 id="title">📦 Products</h2>
-  <div>
-    <button class="dashboard-btn" onclick="goDashboard()">Dashboard</button>
-    <button class="logout-btn" onclick="logout()">Logout</button>
+  <div class="header-left">
+    <span style="font-size: 32px;">📦</span>
+    <h2 id="pageTitle">Products</h2>
+  </div>
+  <div class="header-actions">
+    <button class="dashboard-btn" onclick="goDashboard()">
+      <span>📊</span>
+      <span>Dashboard</span>
+    </button>
+    <button class="logout-btn" onclick="logout()">
+      <span>🚪</span>
+      <span>Logout</span>
+    </button>
   </div>
 </header>
 
+<!-- Container -->
 <div class="container">
-<table>
-<thead>
-<tr>
-  <th>Name</th>
-  <th>Category</th>
-  <th>Supplier</th>
-  <th>Quantity</th>
-  <th>Cost</th>
-  <th>Value</th>
-  <th>Status</th>
-</tr>
-</thead>
-<tbody id="table"></tbody>
-</table>
+
+  <!-- Stats Summary -->
+  <div class="stats-summary">
+    <div class="stat-box blue">
+      <div class="stat-label">Total Products</div>
+      <div class="stat-value" id="totalProducts">—</div>
+    </div>
+    <div class="stat-box red">
+      <div class="stat-label">Low Stock</div>
+      <div class="stat-value" id="lowStockCount">—</div>
+    </div>
+    <div class="stat-box green">
+      <div class="stat-label">Total Value</div>
+      <div class="stat-value">₹<span id="totalValue">—</span></div>
+    </div>
+  </div>
+
+  <!-- Filters -->
+  <div class="filters">
+    <span class="filter-label">Filter:</span>
+    <button class="filter-btn active" onclick="setFilter('all')">All Products</button>
+    <button class="filter-btn" onclick="setFilter('low')">⚠️ Low Stock Only</button>
+    <button class="filter-btn" onclick="setFilter('instock')">✅ In Stock Only</button>
+  </div>
+
+  <!-- Table -->
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr>
+          <th>Product Name</th>
+          <th>Category</th>
+          <th>Supplier</th>
+          <th class="text-center">Quantity</th>
+          <th class="text-center">Cost Price</th>
+          <th class="text-center">Total Value</th>
+          <th class="text-center">Status</th>
+        </tr>
+      </thead>
+      <tbody id="productTable">
+        <tr>
+          <td colspan="7" class="loading-row">
+            <div class="spinner"></div>
+            <div>Loading products...</div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
 </div>
 
 <script>
-document.addEventListener("DOMContentLoaded", () => {
+const BASE_URL = "http://127.0.0.1:5000";
+let allProducts = [];
+let currentFilter = 'all';
 
-  const BASE_URL = "http://127.0.0.1:5000";
+// Check URL parameters
+const params = new URLSearchParams(window.location.search);
+const urlFilter = params.get("filter");
+if (urlFilter === "low") {
+  currentFilter = 'low';
+  document.getElementById("pageTitle").innerText = "⚠️ Low Stock Products";
+}
 
-  
-  /* 📌 READ FILTER */
-  const params = new URLSearchParams(window.location.search);
-  const filter = params.get("filter");
+// Load Products
+async function loadProducts() {
+  try {
+    const res = await fetch(`${BASE_URL}/api/products`, { credentials: "include" });
+    
+    if (!res.ok) {
+      throw new Error("Failed to load products");
+    }
 
-  if (filter === "low") {
-    document.getElementById("title").innerText = "⚠️ Low Stock Products";
+    allProducts = await res.json();
+    updateStats();
+    displayProducts();
+  } catch (error) {
+    console.error("Error loading products:", error);
+    const table = document.getElementById("productTable");
+    table.innerHTML = `
+      <tr>
+        <td colspan="7" class="empty-state">
+          <div class="empty-icon">⚠️</div>
+          <div class="empty-text">Failed to load products</div>
+        </td>
+      </tr>`;
+  }
+}
+
+// Update Stats
+function updateStats() {
+  const totalProducts = allProducts.length;
+  const lowStockProducts = allProducts.filter(p => 
+    Number(p.quantity) <= Number(p.lowStock)
+  ).length;
+  const totalValue = allProducts.reduce((sum, p) => 
+    sum + (Number(p.quantity) * Number(p.costPrice)), 0
+  );
+
+  document.getElementById("totalProducts").innerText = totalProducts;
+  document.getElementById("lowStockCount").innerText = lowStockProducts;
+  document.getElementById("totalValue").innerText = totalValue.toLocaleString("en-IN");
+}
+
+// Display Products
+function displayProducts() {
+  const table = document.getElementById("productTable");
+  table.innerHTML = "";
+
+  let displayProducts = allProducts;
+
+  // Apply filter
+  if (currentFilter === 'low') {
+    displayProducts = allProducts.filter(p => 
+      Number(p.quantity) <= Number(p.lowStock)
+    );
+  } else if (currentFilter === 'instock') {
+    displayProducts = allProducts.filter(p => 
+      Number(p.quantity) > Number(p.lowStock)
+    );
   }
 
-  fetch(`${BASE_URL}/api/products`)
-    .then(res => {
-      if (!res.ok) throw new Error("Failed to load products");
-      return res.json();
-    })
-    .then(products => {
+  if (displayProducts.length === 0) {
+    table.innerHTML = `
+      <tr>
+        <td colspan="7" class="empty-state">
+          <div class="empty-icon">📦</div>
+          <div class="empty-text">No products found</div>
+        </td>
+      </tr>`;
+    return;
+  }
 
-      const table = document.getElementById("table");
-      table.innerHTML = "";
+  displayProducts.forEach(p => {
+    const qty = Number(p.quantity) || 0;
+    const cost = Number(p.costPrice) || 0;
+    const lowStock = Number(p.lowStock) || 0;
+    const value = qty * cost;
+    const isLowStock = qty <= lowStock;
 
-      let displayProducts = products;
+    table.innerHTML += `
+      <tr>
+        <td class="product-name">${p.name}</td>
+        <td>${p.category}</td>
+        <td>${p.supplier}</td>
+        <td class="text-center"><strong>${qty}</strong></td>
+        <td class="text-center">₹${cost.toLocaleString("en-IN")}</td>
+        <td class="text-center">₹${value.toLocaleString("en-IN")}</td>
+        <td class="text-center">
+          <span class="status-badge ${isLowStock ? 'status-low' : 'status-ok'}">
+            ${isLowStock ? '⚠️ Low Stock' : '✅ In Stock'}
+          </span>
+        </td>
+      </tr>`;
+  });
+}
 
-      if (filter === "low") {
-        displayProducts = products.filter(p =>
-          Number(p.quantity) < Number(p.lowStock)
-        );
-      }
+// Set Filter
+function setFilter(filter) {
+  currentFilter = filter;
+  
+  // Update active button
+  document.querySelectorAll('.filter-btn').forEach(btn => {
+    btn.classList.remove('active');
+  });
+  event.target.classList.add('active');
+  
+  // Update title
+  if (filter === 'low') {
+    document.getElementById("pageTitle").innerText = "⚠️ Low Stock Products";
+  } else if (filter === 'instock') {
+    document.getElementById("pageTitle").innerText = "✅ In Stock Products";
+  } else {
+    document.getElementById("pageTitle").innerText = "Products";
+  }
+  
+  displayProducts();
+}
 
-      if (displayProducts.length === 0) {
-        table.innerHTML =
-          `<tr><td colspan="7" class="empty">No products found</td></tr>`;
-        return;
-      }
+// Navigation
+function goDashboard() {
+  window.location.href = "/admin/dashboard";
+}
 
-      displayProducts.forEach(p => {
-        const qty = Number(p.quantity) || 0;
-        const cost = Number(p.costPrice) || 0;
-        const low = Number(p.lowStock) || 0;
-        const value = qty * cost;
-
-        table.innerHTML += `
-          <tr>
-            <td>${p.name}</td>
-            <td>${p.category}</td>
-            <td>${p.supplier}</td>
-            <td>${qty}</td>
-            <td>₹${cost}</td>
-            <td>₹${value}</td>
-            <td class="${qty < low ? 'low' : 'ok'}">
-              ${qty < low ? "Low Stock" : "In Stock"}
-            </td>
-          </tr>
-        `;
-      });
-    })
-    .catch(err => {
-      console.error(err);
-      document.getElementById("table").innerHTML =
-        `<tr><td colspan="7" class="empty">Unable to load products</td></tr>`;
+function logout() {
+  fetch(`${BASE_URL}/logout`, { credentials: "include" })
+    .then(() => {
+      window.location.href = "/login-page";
     });
-
-});
-
-function goDashboard(){
-  location.href = "/admin/dashboard";
 }
 
-function logout(){
-  localStorage.clear();
-  location.href = "/admin/login";
-}
+// Initialize
+loadProducts();
 </script>
 
 </body>

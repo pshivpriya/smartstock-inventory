@@ -2,150 +2,529 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>SmartStock Admin Dashboard</title>
+<title>Admin Dashboard | SmartStock</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
-body{
-  margin:0;
-  font-family:"Segoe UI",sans-serif;
-  background:linear-gradient(135deg,#0f172a,#020617);
-  color:#e5e7eb;
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
-header{
-  padding:20px 40px;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  background:rgba(15,23,42,.9);
-}
-.logout-btn{
-  background:#ef4444;
-  color:white;
-  border:none;
-  padding:8px 18px;
-  border-radius:999px;
-  cursor:pointer;
-  font-weight:bold;
-}
-.cards{
-  padding:40px;
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
-  gap:24px;
-}
-.card{
-  background:rgba(255,255,255,.08);
-  backdrop-filter:blur(16px);
-  border-radius:18px;
-  padding:28px;
-  cursor:pointer;
-  transition:.2s;
-}
-.card:hover{ transform:translateY(-4px); }
-.blue{color:#38bdf8}
-.red{color:#f87171}
-.green{color:#4ade80}
 
-.low-stock-alert{
-  background:#ef4444;
-  color:white;
-  padding:12px;
-  text-align:center;
-  font-weight:bold;
-  display:none;
-  animation:blink 1s infinite;
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  min-height: 100vh;
+  color: #1e293b;
 }
-@keyframes blink{ 50%{opacity:.75} }
+
+/* Header */
+header {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  padding: 20px 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.logo {
+  font-size: 32px;
+}
+
+.header-title h1 {
+  font-size: 24px;
+  font-weight: 700;
+  color: #1e293b;
+}
+
+.header-subtitle {
+  font-size: 13px;
+  color: #64748b;
+  font-weight: 500;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+/* Bell Notification */
+.bell-container {
+  position: relative;
+  cursor: pointer;
+  padding: 10px;
+  background: #f1f5f9;
+  border-radius: 12px;
+  transition: all 0.3s ease;
+}
+
+.bell-container:hover {
+  background: #e2e8f0;
+  transform: scale(1.05);
+}
+
+.bell-icon {
+  font-size: 24px;
+}
+
+.bell-badge {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  background: #ef4444;
+  color: white;
+  border-radius: 50%;
+  padding: 2px 6px;
+  font-size: 11px;
+  font-weight: 700;
+  min-width: 20px;
+  text-align: center;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+}
+
+/* Buttons */
+button {
+  padding: 12px 24px;
+  border-radius: 12px;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+}
+
+button:active {
+  transform: translateY(0);
+}
+
+.register-btn {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: white;
+}
+
+.logout-btn {
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+  color: white;
+}
+
+/* Alert Banner */
+.alert-banner {
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+  color: white;
+  padding: 16px;
+  text-align: center;
+  font-weight: 600;
+  font-size: 15px;
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+  animation: slideDown 0.5s ease;
+  display: none;
+}
+
+@keyframes slideDown {
+  from { transform: translateY(-100%); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+/* Low Stock Popup */
+.low-stock-popup {
+  display: none;
+  position: fixed;
+  top: 90px;
+  right: 40px;
+  background: white;
+  border-radius: 16px;
+  padding: 24px;
+  width: 360px;
+  max-height: 500px;
+  overflow-y: auto;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  z-index: 999;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.popup-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.popup-header h3 {
+  font-size: 18px;
+  color: #1e293b;
+}
+
+.close-popup {
+  background: #f1f5f9;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 18px;
+}
+
+.low-stock-list {
+  list-style: none;
+}
+
+.low-stock-list li {
+  padding: 12px;
+  background: #fef2f2;
+  border-left: 4px solid #ef4444;
+  margin-bottom: 8px;
+  border-radius: 8px;
+  font-size: 14px;
+  color: #991b1b;
+}
+
+/* Container */
+.container {
+  padding: 40px;
+  max-width: 1600px;
+  margin: 0 auto;
+}
+
+/* Stats Grid */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 24px;
+  margin-bottom: 40px;
+}
+
+/* Stat Card */
+.stat-card {
+  background: white;
+  border-radius: 20px;
+  padding: 28px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  position: relative;
+  overflow: hidden;
+}
+
+.stat-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--gradient-start), var(--gradient-end));
+}
+
+.stat-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.15);
+}
+
+.stat-card.blue {
+  --gradient-start: #3b82f6;
+  --gradient-end: #1d4ed8;
+}
+
+.stat-card.red {
+  --gradient-start: #ef4444;
+  --gradient-end: #dc2626;
+}
+
+.stat-card.green {
+  --gradient-start: #10b981;
+  --gradient-end: #059669;
+}
+
+.stat-card.purple {
+  --gradient-start: #8b5cf6;
+  --gradient-end: #6d28d9;
+}
+
+.stat-card.orange {
+  --gradient-start: #f59e0b;
+  --gradient-end: #d97706;
+}
+
+.stat-card.cyan {
+  --gradient-start: #06b6d4;
+  --gradient-end: #0891b2;
+}
+
+.stat-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 16px;
+}
+
+.stat-icon {
+  font-size: 36px;
+  opacity: 0.9;
+}
+
+.stat-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 8px;
+}
+
+.stat-value {
+  font-size: 36px;
+  font-weight: 700;
+  background: linear-gradient(90deg, var(--gradient-start), var(--gradient-end));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.stat-description {
+  font-size: 13px;
+  color: #94a3b8;
+  margin-top: 8px;
+}
+
+/* Quick Actions Grid */
+.quick-actions {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 20px;
+}
+
+.section-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: white;
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.action-card {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 16px;
+  padding: 24px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.action-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.2);
+}
+
+.action-icon {
+  font-size: 48px;
+  margin-bottom: 16px;
+}
+
+.action-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #1e293b;
+}
+
+/* Loading State */
+.loading {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border: 3px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  border-top-color: #3b82f6;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  header {
+    flex-direction: column;
+    gap: 16px;
+    padding: 16px 20px;
+  }
+
+  .container {
+    padding: 20px;
+  }
+
+  .stats-grid, .quick-actions {
+    grid-template-columns: 1fr;
+  }
+
+  .low-stock-popup {
+    right: 20px;
+    left: 20px;
+    width: auto;
+  }
+
+  button {
+    padding: 10px 16px;
+    font-size: 13px;
+  }
+}
 </style>
 </head>
 
 <body>
 
+<!-- Header -->
 <header>
-  <h2>📊 SmartStock Admin Dashboard</h2>
+  <div class="header-left">
+    <div class="logo">📊</div>
+    <div class="header-title">
+      <h1>SmartStock Dashboard</h1>
+      <div class="header-subtitle">Inventory Management System</div>
+    </div>
+  </div>
 
-  <!-- 🔝 HEADER ACTIONS -->
-  <div style="display:flex;align-items:center;gap:14px;">
-
-    <!-- 🔔 LOW STOCK BELL -->
-    <div id="bell" onclick="toggleLowStockPopup()"
-         style="cursor:pointer;position:relative;font-size:20px;">
-      🔔
-      <span id="bellCount"
-        style="position:absolute;top:-8px;right:-10px;
-        background:red;color:white;border-radius:50%;
-        padding:2px 7px;font-size:12px;display:none;">0</span>
+  <div class="header-actions">
+    <!-- Bell Notification -->
+    <div class="bell-container" onclick="toggleLowStockPopup()">
+      <div class="bell-icon">🔔</div>
+      <span id="bellBadge" class="bell-badge" style="display: none;">0</span>
     </div>
 
-    <!-- 👤 REGISTER EMPLOYEE -->
-    <button
-      onclick="goRegisterEmployee()"
-      style="
-        background:#22c55e;
-        color:#022c22;
-        border:none;
-        padding:8px 16px;
-        border-radius:999px;
-        cursor:pointer;
-        font-weight:bold;
-      ">
-      👤 Register Employee
+    <!-- Register Employee Button -->
+    <button class="register-btn" onclick="goRegisterEmployee()">
+      <span>👤</span>
+      <span>Register Employee</span>
     </button>
 
-    <!-- 🚪 LOGOUT -->
-    <button class="logout-btn" onclick="logout()">Logout</button>
+    <!-- Logout Button -->
+    <button class="logout-btn" onclick="logout()">
+      <span>🚪</span>
+      <span>Logout</span>
+    </button>
   </div>
 </header>
 
-<div id="lowStockAlert" class="low-stock-alert">
+<!-- Alert Banner -->
+<div id="alertBanner" class="alert-banner">
   ⚠️ Low Stock Alert! Please restock immediately.
 </div>
 
-<div id="lowStockPopup"
-  style="display:none;position:fixed;top:90px;right:40px;
-  background:#020617;border-radius:12px;
-  padding:20px;width:320px;
-  box-shadow:0 0 25px rgba(0,0,0,.6);z-index:999;">
-  <h3>⚠️ Low Stock Products</h3>
-  <ul id="lowStockList"></ul>
+<!-- Low Stock Popup -->
+<div id="lowStockPopup" class="low-stock-popup">
+  <div class="popup-header">
+    <h3>⚠️ Low Stock Products</h3>
+    <button class="close-popup" onclick="toggleLowStockPopup()">✕</button>
+  </div>
+  <ul id="lowStockList" class="low-stock-list"></ul>
 </div>
 
-<div class="cards">
+<!-- Main Container -->
+<div class="container">
+  
+  <!-- Stats Grid -->
+  <div class="stats-grid">
+    
+    <!-- Total Products -->
+    <div class="stat-card blue" onclick="goProducts()">
+      <div class="stat-header">
+        <div>
+          <div class="stat-label">Total Products</div>
+          <div class="stat-value" id="totalProducts">
+            <span class="loading"></span>
+          </div>
+          <div class="stat-description">In inventory</div>
+        </div>
+        <div class="stat-icon">📦</div>
+      </div>
+    </div>
 
-  <div class="card" onclick="goProducts()">
-    <h3>Total Products</h3>
-    <h1 class="blue" id="totalProducts">0</h1>
+    <!-- Low Stock Items -->
+    <div class="stat-card red" onclick="goProducts()">
+      <div class="stat-header">
+        <div>
+          <div class="stat-label">Low Stock Items</div>
+          <div class="stat-value" id="lowStock">
+            <span class="loading"></span>
+          </div>
+          <div class="stat-description">Needs restocking</div>
+        </div>
+        <div class="stat-icon">⚠️</div>
+      </div>
+    </div>
+
+    <!-- Inventory Value -->
+    <div class="stat-card green">
+      <div class="stat-header">
+        <div>
+          <div class="stat-label">Inventory Value</div>
+          <div class="stat-value">
+            ₹<span id="inventoryValue"><span class="loading"></span></span>
+          </div>
+          <div class="stat-description">Total stock worth</div>
+        </div>
+        <div class="stat-icon">💰</div>
+      </div>
+    </div>
+
   </div>
 
-  <div class="card" onclick="goLowStock()">
-    <h3>Low Stock Items</h3>
-    <h1 class="red" id="lowStock">0</h1>
-  </div>
+  <!-- Quick Actions -->
+  <h2 class="section-title">⚡ Quick Actions</h2>
+  <div class="quick-actions">
+    
+    <div class="action-card" onclick="goAddProduct()">
+      <div class="action-icon">➕</div>
+      <div class="action-title">Add Product</div>
+    </div>
 
-  <div class="card">
-    <h3>Inventory Value</h3>
-    <h1 class="green">₹<span id="inventoryValue">0</span></h1>
-  </div>
+    <div class="action-card" onclick="goTransactions()">
+      <div class="action-icon">🔄</div>
+      <div class="action-title">Stock Transactions</div>
+    </div>
 
-  <div class="card" onclick="goAddProduct()">
-    <h3>Add Product</h3>
-    <h1 class="green">＋</h1>
-  </div>
+    <div class="action-card" onclick="goManageUsers()">
+      <div class="action-icon">👥</div>
+      <div class="action-title">Manage Users</div>
+    </div>
 
-  <div class="card" onclick="goTransactions()">
-    <h3>Stock Transactions</h3>
-    <h1>🔄</h1>
-  </div>
+    <div class="action-card" onclick="goReports()">
+      <div class="action-icon">📑</div>
+      <div class="action-title">Reports & Export</div>
+    </div>
 
-  <div class="card" onclick="goManageUsers()">
-    <h3>Manage Users</h3>
-    <h1 class="blue">👥</h1>
-  </div>
-
-  <div class="card" onclick="goReports()">
-    <h3>Reports & Export</h3>
-    <h1>📑</h1>
   </div>
 
 </div>
@@ -153,71 +532,84 @@ header{
 <script>
 const BASE_URL = "http://127.0.0.1:5000";
 
-/* 🔐 ADMIN AUTH (STANDARDIZED) */
-if(
-  localStorage.getItem("loggedIn") !== "true" ||
-  localStorage.getItem("role") !== "admin"
-){
-  location.href = "/admin/login";
+// Fetch Total Products
+fetch(`${BASE_URL}/api/products`, { credentials: "include" })
+  .then(r => r.json())
+  .then(d => {
+    document.getElementById("totalProducts").innerText = d.length;
+  })
+  .catch(err => {
+    console.error("Error loading products:", err);
+    document.getElementById("totalProducts").innerText = "—";
+  });
+
+// Fetch Inventory Value
+fetch(`${BASE_URL}/inventory-value`, { credentials: "include" })
+  .then(r => r.json())
+  .then(d => {
+    document.getElementById("inventoryValue").innerText = 
+      Number(d.inventoryValue || 0).toLocaleString("en-IN");
+  })
+  .catch(err => {
+    console.error("Error loading inventory value:", err);
+    document.getElementById("inventoryValue").innerText = "—";
+  });
+
+// Fetch Low Stock Items
+fetch(`${BASE_URL}/low-stock`, { credentials: "include" })
+  .then(r => r.json())
+  .then(d => {
+    document.getElementById("lowStock").innerText = d.count;
+
+    if (d.count > 0) {
+      document.getElementById("alertBanner").style.display = "block";
+      document.getElementById("bellBadge").style.display = "inline-block";
+      document.getElementById("bellBadge").innerText = d.count;
+
+      const list = document.getElementById("lowStockList");
+      list.innerHTML = "";
+      d.items.forEach(p => {
+        const li = document.createElement("li");
+        li.textContent = `${p.name} — Qty: ${p.quantity} (Min: ${p.lowStock})`;
+        list.appendChild(li);
+      });
+    }
+  })
+  .catch(err => {
+    console.error("Error loading low stock:", err);
+    document.getElementById("lowStock").innerText = "—";
+  });
+
+// Toggle Low Stock Popup
+function toggleLowStockPopup() {
+  const popup = document.getElementById("lowStockPopup");
+  popup.style.display = popup.style.display === "block" ? "none" : "block";
 }
 
-/* TOTAL PRODUCTS */
-fetch(`${BASE_URL}/api/products`)
-.then(r=>r.json())
-.then(d=>{
-  document.getElementById("totalProducts").innerText = d.length;
-});
-
-/* INVENTORY VALUE */
-fetch(`${BASE_URL}/inventory-value`)
-.then(r=>r.json())
-.then(d=>{
-  document.getElementById("inventoryValue").innerText =
-    Number(d.inventoryValue || 0).toLocaleString("en-IN");
-});
-
-/* LOW STOCK */
-fetch(`${BASE_URL}/low-stock`)
-.then(r=>r.json())
-.then(d=>{
-  document.getElementById("lowStock").innerText = d.count;
-
-  if(d.count>0){
-    document.getElementById("lowStockAlert").style.display="block";
-    document.getElementById("bellCount").style.display="inline";
-    document.getElementById("bellCount").innerText=d.count;
-
-    const list=document.getElementById("lowStockList");
-    list.innerHTML="";
-    d.items.forEach(p=>{
-      const li=document.createElement("li");
-      li.textContent=`${p.name} — Qty: ${p.quantity} (Limit: ${p.lowStock})`;
-      list.appendChild(li);
-    });
+// Close popup when clicking outside
+document.addEventListener("click", function(event) {
+  const popup = document.getElementById("lowStockPopup");
+  const bell = document.querySelector(".bell-container");
+  
+  if (!popup.contains(event.target) && !bell.contains(event.target)) {
+    popup.style.display = "none";
   }
 });
 
-/* POPUP */
-function toggleLowStockPopup(){
-  const p=document.getElementById("lowStockPopup");
-  p.style.display=p.style.display==="block"?"none":"block";
+// Navigation Functions
+function goProducts() { location.href = "/products"; }
+function goAddProduct() { location.href = "/add/product"; }
+function goTransactions() { location.href = "/transactions"; }
+function goManageUsers() { location.href = "/manage/users"; }
+function goReports() { location.href = "/reports"; }
+function goRegisterEmployee() { location.href = "/register/employee"; }
+
+function logout() {
+  fetch(`${BASE_URL}/logout`, { credentials: "include" })
+    .then(() => {
+      window.location.href = "/login-page";
+    });
 }
-
-/* NAVIGATION */
-function goProducts(){ location.href="/products"; }
-function goAddProduct(){ location.href="/add/product"; }
-function goTransactions(){ location.href="/transactions"; }
-function goManageUsers(){ location.href="/manage/users"; }
-function goLowStock(){ location.href="/products?filter=low"; }
-function goReports(){ location.href="/reports"; }
-function goRegisterEmployee(){ location.href="/register/employee"; }
-
-function logout(){
-  localStorage.clear();
-  location.href = FRONTEND_BASE + "/login";
-
-}
-
 </script>
 
 </body>

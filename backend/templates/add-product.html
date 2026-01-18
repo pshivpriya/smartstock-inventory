@@ -6,113 +6,302 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
-body{
-  margin:0;
-  font-family:"Segoe UI",sans-serif;
-  background:linear-gradient(135deg,#0f172a,#020617);
-  color:#e5e7eb;
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
-header{
-  padding:20px 40px;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  background:rgba(15,23,42,.9);
-}
-button{
-  border:none;
-  padding:8px 18px;
-  border-radius:999px;
-  cursor:pointer;
-  font-weight:bold;
-}
-.dashboard-btn{background:#38bdf8;color:#020617}
-.logout-btn{background:#ef4444;color:white}
 
-.container{
-  padding:50px;
-  display:flex;
-  justify-content:center;
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  min-height: 100vh;
+  color: #1e293b;
 }
-.card{
-  width:100%;
-  max-width:600px;
-  background:rgba(255,255,255,.08);
-  backdrop-filter:blur(16px);
-  border-radius:18px;
-  padding:30px;
+
+/* Header */
+header {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  padding: 20px 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  position: sticky;
+  top: 0;
+  z-index: 100;
 }
-.form-group{margin-bottom:18px}
-label{display:block;margin-bottom:6px}
-input{
-  width:100%;
-  padding:12px;
-  border-radius:10px;
-  border:none;
-  background:#020617;
-  color:#e5e7eb;
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
 }
-.primary-btn{
-  width:100%;
-  padding:14px;
-  border-radius:999px;
-  background:linear-gradient(90deg,#0ea5e9,#22c55e);
-  font-weight:bold;
-  cursor:pointer;
+
+.header-left h2 {
+  font-size: 24px;
+  font-weight: 700;
 }
-.message{
-  margin-top:12px;
-  font-weight:bold;
-  text-align:center;
+
+.header-actions {
+  display: flex;
+  gap: 12px;
+}
+
+button {
+  padding: 12px 24px;
+  border-radius: 12px;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+}
+
+.dashboard-btn {
+  background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+  color: white;
+}
+
+.logout-btn {
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+  color: white;
+}
+
+/* Container */
+.container {
+  padding: 60px 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Form Card */
+.form-card {
+  width: 100%;
+  max-width: 600px;
+  background: white;
+  border-radius: 24px;
+  padding: 40px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+}
+
+.form-card h3 {
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  text-align: center;
+}
+
+.form-subtitle {
+  text-align: center;
+  color: #64748b;
+  margin-bottom: 32px;
+  font-size: 14px;
+}
+
+/* Form Groups */
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.form-group {
+  margin-bottom: 24px;
+}
+
+.form-group label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: #475569;
+  font-size: 14px;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 14px 16px;
+  border: 2px solid #e2e8f0;
+  border-radius: 12px;
+  font-size: 15px;
+  transition: all 0.3s ease;
+  font-family: inherit;
+  background: white;
+  color: #1e293b;
+}
+
+.form-group input:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.form-group input::placeholder {
+  color: #94a3b8;
+}
+
+/* Icon Input */
+.input-with-icon {
+  position: relative;
+}
+
+.input-icon {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 18px;
+}
+
+.input-with-icon input {
+  padding-left: 45px;
+}
+
+/* Submit Button */
+.submit-btn {
+  width: 100%;
+  padding: 16px;
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: white;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 700;
+  margin-top: 12px;
+}
+
+.submit-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(16, 185, 129, 0.3);
+}
+
+/* Message */
+.message {
+  margin-top: 20px;
+  padding: 12px;
+  border-radius: 12px;
+  font-weight: 600;
+  text-align: center;
+  display: none;
+}
+
+.message.success {
+  background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+  color: #065f46;
+}
+
+.message.error {
+  background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+  color: #991b1b;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  header {
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .form-card {
+    padding: 30px 20px;
+  }
+
+  .form-row {
+    grid-template-columns: 1fr;
+  }
 }
 </style>
 </head>
 
 <body>
 
+<!-- Header -->
 <header>
-  <h2>➕ Add Product</h2>
-  <div>
-    <button class="dashboard-btn" onclick="goDashboard()">Dashboard</button>
-    <button class="logout-btn" onclick="logout()">Logout</button>
+  <div class="header-left">
+    <span style="font-size: 32px;">➕</span>
+    <h2>Add Product</h2>
+  </div>
+  <div class="header-actions">
+    <button class="dashboard-btn" onclick="goDashboard()">
+      <span>📊</span>
+      <span>Dashboard</span>
+    </button>
+    <button class="logout-btn" onclick="logout()">
+      <span>🚪</span>
+      <span>Logout</span>
+    </button>
   </div>
 </header>
 
+<!-- Container -->
 <div class="container">
-  <div class="card">
+  <div class="form-card">
+    <h3>Add New Product</h3>
+    <p class="form-subtitle">Fill in the product details below</p>
 
-    <div class="form-group">
-      <label>Product Name</label>
-      <input id="name" placeholder="Eraser">
-    </div>
+    <form id="productForm" onsubmit="addProduct(event)">
+      
+      <div class="form-group">
+        <label for="name">Product Name *</label>
+        <div class="input-with-icon">
+          <span class="input-icon">📦</span>
+          <input type="text" id="name" placeholder="e.g., Ball Pen Blue" required>
+        </div>
+      </div>
 
-    <div class="form-group">
-      <label>Category</label>
-      <input id="category" placeholder="Stationery">
-    </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="category">Category *</label>
+          <input type="text" id="category" placeholder="e.g., Stationery" required>
+        </div>
 
-    <div class="form-group">
-      <label>Supplier</label>
-      <input id="supplier" placeholder="Supplier A">
-    </div>
+        <div class="form-group">
+          <label for="supplier">Supplier *</label>
+          <input type="text" id="supplier" placeholder="e.g., Supplier A" required>
+        </div>
+      </div>
 
-    <div class="form-group">
-      <label>Quantity</label>
-      <input id="quantity" type="number" min="0" value="0">
-    </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="quantity">Initial Quantity *</label>
+          <div class="input-with-icon">
+            <span class="input-icon">📊</span>
+            <input type="number" id="quantity" placeholder="0" min="0" required>
+          </div>
+        </div>
 
-    <div class="form-group">
-      <label>Cost Price (₹)</label>
-      <input id="costPrice" type="number" min="1">
-    </div>
+        <div class="form-group">
+          <label for="costPrice">Cost Price (₹) *</label>
+          <div class="input-with-icon">
+            <span class="input-icon">💰</span>
+            <input type="number" id="costPrice" placeholder="0.00" min="0.01" step="0.01" required>
+          </div>
+        </div>
+      </div>
 
-    <div class="form-group">
-      <label>Low Stock Limit</label>
-      <input id="lowStock" type="number" value="10" min="1">
-    </div>
+      <div class="form-group">
+        <label for="lowStock">Low Stock Alert Level *</label>
+        <div class="input-with-icon">
+          <span class="input-icon">⚠️</span>
+          <input type="number" id="lowStock" placeholder="10" min="1" required>
+        </div>
+      </div>
 
-    <button class="primary-btn" onclick="addProduct()">Add Product</button>
-    <div class="message" id="msg"></div>
+      <button type="submit" class="submit-btn">
+        ✅ Add Product to Inventory
+      </button>
+
+      <div id="message" class="message"></div>
+    </form>
 
   </div>
 </div>
@@ -120,62 +309,82 @@ input{
 <script>
 const BASE_URL = "http://127.0.0.1:5000";
 
-/* 🔐 ADMIN AUTH GUARD */
-if (localStorage.getItem("adminLoggedIn") !== "true") {
-  window.location.href = "/admin/login";
+// Show Message
+function showMessage(text, type) {
+  const msg = document.getElementById("message");
+  msg.textContent = text;
+  msg.className = `message ${type}`;
+  msg.style.display = "block";
+
+  if (type === "success") {
+    setTimeout(() => {
+      window.location.href = "/products";
+    }, 1500);
+  }
 }
 
-/* ➕ ADD PRODUCT */
-function addProduct(){
+// Add Product
+async function addProduct(event) {
+  event.preventDefault();
+
   const name = document.getElementById("name").value.trim();
   const category = document.getElementById("category").value.trim();
   const supplier = document.getElementById("supplier").value.trim();
   const quantity = Number(document.getElementById("quantity").value);
   const costPrice = Number(document.getElementById("costPrice").value);
   const lowStock = Number(document.getElementById("lowStock").value);
-  const msg = document.getElementById("msg");
 
-  if(!name || !category || !supplier || quantity < 0 || costPrice <= 0 || lowStock <= 0){
-    msg.style.color="#f87171";
-    msg.textContent="❌ Please enter valid product details";
+  // Validation
+  if (!name || !category || !supplier) {
+    showMessage("❌ Please fill in all required fields", "error");
     return;
   }
 
-  fetch(`${BASE_URL}/add-product`, {
-    method:"POST",
-    headers:{ "Content-Type":"application/json" },
-    body:JSON.stringify({
-      name,
-      category,
-      supplier,
-      quantity,
-      costPrice,
-      lowStock
-    })
-  })
-  .then(res => res.json())
-  .then(() => {
-    msg.style.color="#22c55e";
-    msg.textContent="✅ Product added successfully";
+  if (quantity < 0 || costPrice <= 0 || lowStock <= 0) {
+    showMessage("❌ Please enter valid numeric values", "error");
+    return;
+  }
 
-    setTimeout(() => {
-      window.location.href = "/products";
-    }, 800);
-  })
-  .catch(() => {
-    msg.style.color="#f87171";
-    msg.textContent="❌ Server error. Try again";
-  });
+  try {
+    const res = await fetch(`${BASE_URL}/api/products`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+      body: JSON.stringify({
+        name,
+        category,
+        supplier,
+        quantity,
+        costPrice,
+        lowStock
+      })
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      throw new Error(data.error || "Failed to add product");
+    }
+
+    showMessage("✅ Product added successfully! Redirecting...", "success");
+    document.getElementById("productForm").reset();
+
+  } catch (error) {
+    console.error("Error adding product:", error);
+    showMessage(`❌ ${error.message}`, "error");
+  }
 }
 
-/* 🔗 NAVIGATION */
-function goDashboard(){
-  window.location.href="/admin/dashboard";
+// Navigation
+function goDashboard() {
+  window.location.href = "/admin/dashboard";
 }
 
-function logout(){
-  localStorage.removeItem("adminLoggedIn");
-  window.location.href="/admin/login";
+function logout() {
+  fetch(`${BASE_URL}/logout`, { credentials: "include" })
+    .then(() => {
+      window.location.href = "/login-page";
+    });
 }
 </script>
 

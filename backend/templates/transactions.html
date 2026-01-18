@@ -6,225 +6,604 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
-body{
-  margin:0;
-  font-family:"Segoe UI",sans-serif;
-  background:#020617;
-  color:#e5e7eb;
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
-header{
-  padding:20px 40px;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  background:#0f172a;
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  min-height: 100vh;
+  color: #1e293b;
 }
-button{
-  padding:8px 18px;
-  border-radius:999px;
-  border:none;
-  font-weight:bold;
-  cursor:pointer;
+
+header {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  padding: 20px 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  position: sticky;
+  top: 0;
+  z-index: 100;
 }
-.dashboard-btn{background:#38bdf8;color:#020617}
-.logout-btn{background:#ef4444;color:white}
-.container{padding:40px}
-.card{
-  background:rgba(255,255,255,.08);
-  border-radius:16px;
-  padding:24px;
-  margin-bottom:30px;
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
 }
-select,input{
-  width:100%;
-  padding:12px;
-  margin:10px 0;
-  border-radius:8px;
-  border:none;
+
+.header-left h2 {
+  font-size: 24px;
+  font-weight: 700;
 }
-.save-btn{
-  background:#22c55e;
-  width:100%;
-  padding:12px;
-  border-radius:999px;
-  font-size:16px;
-  font-weight:bold;
+
+.header-actions {
+  display: flex;
+  gap: 12px;
 }
-table{
-  width:100%;
-  border-collapse:collapse;
-  margin-top:20px;
+
+button {
+  padding: 12px 24px;
+  border-radius: 12px;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
-th,td{
-  padding:14px;
-  text-align:center;
-  border-bottom:1px solid rgba(255,255,255,.1);
+
+button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
 }
-th{background:rgba(255,255,255,.1)}
-.in{color:#4ade80;font-weight:bold}
-.out{color:#f87171;font-weight:bold}
-.empty{opacity:.6;font-style:italic}
+
+.dashboard-btn {
+  background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+  color: white;
+}
+
+.logout-btn {
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+  color: white;
+}
+
+.container {
+  padding: 40px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.card {
+  background: white;
+  border-radius: 20px;
+  padding: 32px;
+  margin-bottom: 32px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+.card h3 {
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 24px;
+  color: #1e293b;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: #475569;
+  font-size: 14px;
+}
+
+select, input {
+  width: 100%;
+  padding: 14px 16px;
+  border: 2px solid #e2e8f0;
+  border-radius: 12px;
+  font-size: 15px;
+  transition: all 0.3s ease;
+  font-family: inherit;
+  background: white;
+}
+
+select:focus, input:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.save-btn {
+  width: 100%;
+  padding: 16px;
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: white;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 700;
+  margin-top: 8px;
+}
+
+.save-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(16, 185, 129, 0.3);
+}
+
+.type-select {
+  background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+  font-weight: 600;
+}
+
+.table-wrapper {
+  overflow-x: auto;
+  border-radius: 12px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+}
+
+thead {
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+}
+
+th {
+  padding: 16px;
+  text-align: left;
+  font-weight: 700;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #64748b;
+  border-bottom: 2px solid #e2e8f0;
+}
+
+td {
+  padding: 16px;
+  border-bottom: 1px solid #f1f5f9;
+  font-size: 14px;
+  color: #475569;
+}
+
+tbody tr {
+  transition: all 0.2s ease;
+}
+
+tbody tr:hover {
+  background: #f8fafc;
+}
+
+.transaction-type {
+  display: inline-block;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-weight: 700;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.type-in {
+  background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+  color: #065f46;
+}
+
+.type-out {
+  background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+  color: #991b1b;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 60px 20px;
+  color: #94a3b8;
+}
+
+.empty-icon {
+  font-size: 64px;
+  margin-bottom: 16px;
+  opacity: 0.5;
+}
+
+.empty-text {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.loading-row {
+  text-align: center;
+  padding: 40px;
+}
+
+.spinner {
+  border: 3px solid #e2e8f0;
+  border-top: 3px solid #3b82f6;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 16px;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.notification {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  padding: 16px 24px;
+  border-radius: 12px;
+  font-weight: 600;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  animation: slideIn 0.3s ease;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+@keyframes slideIn {
+  from { transform: translateX(400px); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+
+.notification.success {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: white;
+}
+
+.notification.error {
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+  color: white;
+}
+
+.notification.warning {
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+  color: white;
+}
+
+@media (max-width: 768px) {
+  header {
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .container {
+    padding: 20px;
+  }
+
+  .card {
+    padding: 20px;
+  }
+
+  table {
+    font-size: 13px;
+  }
+
+  th, td {
+    padding: 12px 8px;
+  }
+}
 </style>
 </head>
 
 <body>
 
 <header>
-  <h2>🔄 Stock Transactions</h2>
-  <div>
-    <button class="dashboard-btn" onclick="goDashboard()">Dashboard</button>
-    <button class="logout-btn" onclick="logout()">Logout</button>
+  <div class="header-left">
+    <span style="font-size: 32px;">🔄</span>
+    <h2>Stock Transactions</h2>
+  </div>
+  <div class="header-actions">
+    <button class="dashboard-btn" onclick="goDashboard()">
+      <span>📊</span>
+      <span>Dashboard</span>
+    </button>
+    <button class="logout-btn" onclick="logout()">
+      <span>🚪</span>
+      <span>Logout</span>
+    </button>
   </div>
 </header>
 
 <div class="container">
 
-<div class="card">
-  <h3>➕ Add Transaction</h3>
+  <!-- Add Transaction Card -->
+  <div class="card">
+    <h3>➕ Add New Transaction</h3>
 
-  <select id="product">
-    <option>Loading products...</option>
-  </select>
+    <div class="form-group">
+      <label for="product">Select Product</label>
+      <select id="product">
+        <option value="">Loading products...</option>
+      </select>
+    </div>
 
-  <select id="type">
-    <option value="IN">IN (Add Stock)</option>
-    <option value="OUT">OUT (Remove Stock)</option>
-  </select>
+    <div class="form-group">
+      <label for="type">Transaction Type</label>
+      <select id="type" class="type-select">
+        <option value="IN">✅ IN (Add Stock)</option>
+        <option value="OUT">📤 OUT (Remove Stock)</option>
+      </select>
+    </div>
 
-  <input type="number" id="quantity" placeholder="Quantity" min="1">
+    <div class="form-group">
+      <label for="quantity">Quantity</label>
+      <input type="number" id="quantity" placeholder="Enter quantity" min="1">
+    </div>
 
-  <button class="save-btn" onclick="saveTransaction()">Save Transaction</button>
-</div>
+    <button class="save-btn" onclick="saveTransaction()">
+      💾 Save Transaction
+    </button>
+  </div>
 
-<div class="card">
-  <h3>📜 Transaction History</h3>
-  <table>
-    <thead>
-      <tr>
-        <th>Product</th>
-        <th>Type</th>
-        <th>Quantity</th>
-        <th>Date & Time</th>
-      </tr>
-    </thead>
-    <tbody id="transactionTable"></tbody>
-  </table>
-</div>
+  <!-- Transaction History Card -->
+  <div class="card">
+    <h3>📜 Transaction History</h3>
+    
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>Product Name</th>
+            <th>Type</th>
+            <th>Quantity</th>
+            <th>Date & Time</th>
+            <th>User</th>
+          </tr>
+        </thead>
+        <tbody id="transactionTable">
+          <tr>
+            <td colspan="5" class="loading-row">
+              <div class="spinner"></div>
+              <div>Loading transactions...</div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
 
 </div>
 
 <script>
 const BASE_URL = "http://127.0.0.1:5000";
+let userRole = null;
 
-if (localStorage.getItem("loggedIn") !== "true") {
-  location.href = "/admin/login";
+function showNotification(message, type = "success") {
+  const notification = document.createElement("div");
+  notification.className = `notification ${type}`;
+  
+  const icon = type === "success" ? "✅" : type === "error" ? "❌" : "⚠️";
+  notification.innerHTML = `<span>${icon}</span><span>${message}</span>`;
+  
+  document.body.appendChild(notification);
+
+  setTimeout(() => {
+    notification.style.animation = "slideIn 0.3s ease reverse";
+    setTimeout(() => notification.remove(), 300);
+  }, 4000);
 }
 
-const role = localStorage.getItem("role");
+async function checkAuth() {
+  try {
+    const res = await fetch(`${BASE_URL}/me`, { credentials: "include" });
+    if (!res.ok) {
+      showNotification("Please log in first", "warning");
+      setTimeout(() => {
+        window.location.href = "/";
+      }, 1500);
+      return false;
+    }
+    
+    const data = await res.json();
+    userRole = data.role;
+    console.log("Authenticated user:", data.email, "Role:", userRole);
+    return true;
+  } catch (error) {
+    console.error("Auth check failed:", error);
+    showNotification("Authentication failed", "error");
+    setTimeout(() => {
+      window.location.href = "/";
+    }, 1500);
+    return false;
+  }
+}
 
-/* LOAD PRODUCTS */
-function loadProducts(selectedId=null){
-  fetch(`${BASE_URL}/api/products`)
-  .then(res => res.json())
-  .then(products => {
-    const sel = document.getElementById("product");
-    sel.innerHTML = `<option value="">Select Product</option>`;
+async function loadProducts(selectedId = null) {
+  try {
+    const res = await fetch(`${BASE_URL}/api/products`, { credentials: "include" });
+    
+    if (!res.ok) {
+      throw new Error("Failed to load products");
+    }
+
+    const products = await res.json();
+    const select = document.getElementById("product");
+    
+    select.innerHTML = `<option value="">— Select a Product —</option>`;
+    
     products.forEach(p => {
-      sel.innerHTML += `
+      select.innerHTML += `
         <option value="${p.id}">
-          ${p.name} (Stock: ${p.quantity})
+          ${p.name} (Current Stock: ${p.quantity})
         </option>`;
     });
-    if(selectedId) sel.value = selectedId;
-  });
+    
+    if (selectedId) {
+      select.value = selectedId;
+    }
+  } catch (error) {
+    console.error("Error loading products:", error);
+    showNotification("Failed to load products", "error");
+  }
 }
 
-/* SAVE TRANSACTION */
-function saveTransaction(){
-  if (role !== "admin") {
-    alert("Only admin can add transactions");
-    return;
-  }
-
+async function saveTransaction() {
   const productId = document.getElementById("product").value;
   const type = document.getElementById("type").value;
   const quantity = Number(document.getElementById("quantity").value);
 
-  if (!productId || quantity <= 0) {
-    alert("Enter valid details");
+  if (!productId) {
+    showNotification("Please select a product", "warning");
     return;
   }
 
-function goDashboard(){
-  const role = localStorage.getItem("role");
+  if (!quantity || quantity <= 0) {
+    showNotification("Please enter a valid quantity", "warning");
+    return;
+  }
 
-  if (role === "admin") {
-    location.href = "/admin/dashboard";
-  } else if (role === "employee") {
-    location.href = "/employee/dashboard";
-  } else {
-    location.href = "/employee/login";
+  if (userRole !== "admin") {
+    showNotification("Only administrators can add transactions", "warning");
+    return;
+  }
+
+  try {
+    const formData = new FormData();
+    formData.append("product_id", productId);
+    formData.append("transaction_type", type);
+    formData.append("quantity", quantity);
+
+    const res = await fetch(`${BASE_URL}/add_transaction`, {
+      method: "POST",
+      credentials: "include",
+      body: formData
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      throw new Error(data.error || "Failed to add transaction");
+    }
+
+    showNotification("✅ Transaction added successfully!", "success");
+    
+    document.getElementById("quantity").value = "";
+    
+    await loadProducts(productId);
+    await loadTransactions();
+
+  } catch (error) {
+    console.error("Error saving transaction:", error);
+    showNotification(error.message || "Failed to save transaction", "error");
   }
 }
 
+async function loadTransactions() {
+  const table = document.getElementById("transactionTable");
+  
+  try {
+    console.log("Fetching transactions from:", `${BASE_URL}/api/transactions`);
+    const res = await fetch(`${BASE_URL}/api/transactions`, { credentials: "include" });
 
-  const formData = new FormData();
-  formData.append("product_id", productId);
-  formData.append("transaction_type", type);
-  formData.append("quantity", quantity);
+    console.log("Response status:", res.status);
 
-  fetch(`${BASE_URL}/add_transaction`, {
-    method: "POST",
-    body: formData
-  })
-  .then(res => res.json())
-  .then(data => {
-    if (data.error) {
-      alert(data.error);
-      return;
+    if (!res.ok) {
+      const errorText = await res.text();
+      console.error("Error response:", errorText);
+      throw new Error(`Failed to load transactions: ${res.status}`);
     }
-    alert("Transaction saved successfully!");
-    document.getElementById("quantity").value = "";
-    loadProducts(productId);
-    loadTransactions();
-  });
-}
 
-/* LOAD TRANSACTIONS */
-function loadTransactions(){
-  fetch(`${BASE_URL}/api/transactions`)
-  .then(res => res.json())
-  .then(data => {
-    const table = document.getElementById("transactionTable");
+    const data = await res.json();
+    console.log("Transactions data:", data);
+    
     table.innerHTML = "";
 
     if (!Array.isArray(data) || data.length === 0) {
-      table.innerHTML =
-        `<tr><td colspan="4" class="empty">No transactions yet</td></tr>`;
+      table.innerHTML = `
+        <tr>
+          <td colspan="5" class="empty-state">
+            <div class="empty-icon">📭</div>
+            <div class="empty-text">No transactions yet. Add your first transaction above!</div>
+          </td>
+        </tr>`;
       return;
     }
 
     data.forEach(t => {
-      const dateText = t.date ? t.date : "-";
-
+      const typeClass = t.type === "IN" ? "type-in" : "type-out";
+      const typeIcon = t.type === "IN" ? "✅" : "📤";
+      
+      // Format the date nicely
+      const date = new Date(t.date);
+      const formattedDate = date.toLocaleString('en-US', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+      });
+      
       table.innerHTML += `
         <tr>
-          <td>${t.productName || "Unknown Product"}</td>
-          <td class="${t.type === "IN" ? "in" : "out"}">${t.type}</td>
-          <td>${t.quantity}</td>
-          <td>${dateText}</td>
-        </tr>
-      `;
+          <td><strong>${t.productName || "Unknown Product"}</strong></td>
+          <td>
+            <span class="transaction-type ${typeClass}">${typeIcon} ${t.type}</span>
+          </td>
+          <td><strong>${t.quantity}</strong></td>
+          <td>${formattedDate}</td>
+          <td>${t.user || "N/A"}</td>
+        </tr>`;
     });
-  })
-  .catch(err => console.error("Transaction load error:", err));
+
+  } catch (error) {
+    console.error("Error loading transactions:", error);
+    table.innerHTML = `
+      <tr>
+        <td colspan="5" class="empty-state">
+          <div class="empty-icon">⚠️</div>
+          <div class="empty-text">Failed to load transactions. ${error.message}</div>
+          <div style="margin-top: 12px; font-size: 14px;">Please check the console for details.</div>
+        </td>
+      </tr>`;
+  }
 }
 
-loadProducts();
-loadTransactions();
+function goDashboard() {
+  if (userRole === "admin") {
+    window.location.href = "/admin/dashboard";
+  } else {
+    window.location.href = "/employee/dashboard";
+  }
+}
 
-function goDashboard(){ location.href="/admin/dashboard"; }
-function logout(){ localStorage.clear(); location.href="/admin/login"; }
+function logout() {
+  fetch(`${BASE_URL}/logout`, { credentials: "include" })
+    .then(() => {
+      window.location.href = "/";
+    });
+}
+
+// Initialize
+(async () => {
+  const authenticated = await checkAuth();
+  
+  if (authenticated) {
+    await loadProducts();
+    await loadTransactions();
+  }
+})();
 </script>
 
 </body>

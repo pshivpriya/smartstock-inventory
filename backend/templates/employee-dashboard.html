@@ -6,73 +6,132 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
+*{margin:0;padding:0;box-sizing:border-box}
 body{
-  margin:0;
-  font-family:"Segoe UI",sans-serif;
-  background:linear-gradient(135deg,#020617,#0f172a);
-  color:#e5e7eb;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);
+  min-height:100vh;
+  color:#1e293b;
 }
+
+/* HEADER */
 header{
+  background:#f8fafc;
   padding:20px 40px;
   display:flex;
   justify-content:space-between;
   align-items:center;
-  background:#0f172a;
+  box-shadow:0 4px 20px rgba(0,0,0,.1);
+}
+.header-left{
+  display:flex;
+  align-items:center;
+  gap:14px;
+}
+.logo{
+  font-size:32px;
+}
+.header-title h2{
+  font-size:24px;
+  font-weight:700;
+}
+.header-title p{
+  font-size:13px;
+  color:#64748b;
 }
 .logout-btn{
-  background:#ef4444;
+  background:linear-gradient(135deg,#ef4444,#dc2626);
   color:white;
   border:none;
-  padding:8px 18px;
-  border-radius:999px;
+  padding:10px 22px;
+  border-radius:12px;
+  font-weight:600;
   cursor:pointer;
-  font-weight:bold;
 }
-.container{padding:40px}
-.section-title{
-  margin:40px 0 15px;
-  font-size:18px;
-  opacity:.85;
+
+/* ALERT */
+.alert{
+  background:linear-gradient(135deg,#ef4444,#dc2626);
+  color:white;
+  padding:14px;
+  text-align:center;
+  font-weight:600;
 }
-.cards{
+
+/* CONTAINER */
+.container{
+  padding:40px;
+  max-width:1400px;
+  margin:auto;
+}
+
+/* STATS */
+.stats{
   display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+  grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
   gap:24px;
 }
-.card{
-  background:rgba(255,255,255,.08);
-  border-radius:18px;
+.stat-card{
+  background:white;
+  border-radius:20px;
   padding:30px;
+  box-shadow:0 8px 32px rgba(0,0,0,.1);
+}
+.stat-title{
+  font-size:14px;
+  color:#64748b;
+  margin-bottom:10px;
+}
+.stat-value{
+  font-size:36px;
+  font-weight:800;
+}
+.blue{color:#3b82f6}
+.red{color:#ef4444}
+.green{color:#10b981}
+
+/* QUICK ACTIONS */
+.section-title{
+  margin:40px 0 20px;
+  font-size:20px;
+  font-weight:700;
+  color:white;
+}
+.actions{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:24px;
+}
+.action-card{
+  background:white;
+  border-radius:20px;
+  padding:40px;
   text-align:center;
   cursor:pointer;
-  transition:.2s;
+  transition:.3s;
 }
-.card:hover{transform:translateY(-4px)}
-.small-card{
-  background:rgba(255,255,255,.08);
-  border-radius:16px;
-  padding:20px;
+.action-card:hover{
+  transform:translateY(-6px);
+  box-shadow:0 12px 30px rgba(0,0,0,.2);
 }
-.list-item{
-  display:flex;
-  justify-content:space-between;
-  padding:8px 0;
-  border-bottom:1px solid rgba(255,255,255,.1);
+.action-icon{
+  font-size:42px;
+  margin-bottom:16px;
 }
-.list-item:last-child{border-bottom:none}
-.badge{
-  padding:4px 10px;
-  border-radius:999px;
-  font-size:12px;
+.action-text{
+  font-size:16px;
+  font-weight:700;
 }
-.low{background:#f87171;color:#020617}
-.in{color:#4ade80}
-.out{color:#f87171}
-.footer-note{
-  margin-top:40px;
+
+/* FOOTER NOTE */
+.note{
+  margin-top:50px;
   text-align:center;
-  font-size:13px;
-  opacity:.6;
+  background:rgba(255,255,255,.15);
+  padding:20px;
+  border-radius:14px;
+  color:white;
+  font-weight:600;
 }
 </style>
 </head>
@@ -80,123 +139,95 @@ header{
 <body>
 
 <header>
-  <h2>👤 Employee Dashboard</h2>
+  <div class="header-left">
+    <div class="logo">📊</div>
+    <div class="header-title">
+      <h2>SmartStock Dashboard</h2>
+      <p>Employee View (Read-Only)</p>
+    </div>
+  </div>
   <button class="logout-btn" onclick="logout()">Logout</button>
 </header>
 
+<div class="alert">
+  🔒 Read-Only Access — Contact Admin for Changes
+</div>
+
 <div class="container">
 
-<!-- MAIN ACTIONS -->
-<div class="cards">
-  <div class="card" onclick="goProducts()">
-    <h2>📦</h2>
-    <p>View Products</p>
+  <!-- STATS -->
+  <div class="stats">
+    <div class="stat-card">
+      <div class="stat-title">TOTAL PRODUCTS</div>
+      <div class="stat-value blue" id="totalProducts">—</div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-title">LOW STOCK ITEMS</div>
+      <div class="stat-value red" id="lowStock">—</div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-title">INVENTORY VALUE</div>
+      <div class="stat-value green" id="inventoryValue">₹—</div>
+    </div>
   </div>
-  <div class="card" onclick="goTransactions()">
-    <h2>📜</h2>
-    <p>View Transactions</p>
+
+  <!-- QUICK ACTIONS -->
+  <div class="section-title">⚡ Quick Actions</div>
+
+  <div class="actions">
+    <div class="action-card" onclick="goProducts()">
+      <div class="action-icon">📦</div>
+      <div class="action-text">View Products</div>
+    </div>
+
+    <div class="action-card" onclick="goTransactions()">
+      <div class="action-icon">📜</div>
+      <div class="action-text">Stock Transactions</div>
+    </div>
+
+    <div class="action-card" onclick="goReports()">
+      <div class="action-icon">📄</div>
+      <div class="action-text">View Reports</div>
+    </div>
   </div>
-</div>
 
-<!-- PROFILE -->
-<h3 class="section-title">👤 Profile</h3>
-<div class="small-card">
-  <p><b>Role:</b> Employee</p>
-  <p><b>Access:</b> Read-Only</p>
-</div>
-
-<!-- TODAY SUMMARY -->
-<h3 class="section-title">📊 Today’s Summary</h3>
-<div class="small-card" id="summary">Loading...</div>
-
-<!-- LOW STOCK -->
-<h3 class="section-title">⚠️ Low Stock Items</h3>
-<div class="small-card" id="lowStock">Loading...</div>
-
-<!-- RECENT TRANSACTIONS -->
-<h3 class="section-title">🕒 Recent Transactions</h3>
-<div class="small-card" id="recentTx">Loading...</div>
-
-<div class="footer-note">
-You have view-only access. Contact admin for changes.
-</div>
+  <div class="note">
+    You can view inventory, transactions and reports.<br>
+    Editing is restricted to administrators only.
+  </div>
 
 </div>
 
 <script>
-/* 🔐 AUTH GUARD */
-const loggedIn = localStorage.getItem("loggedIn");
-const role = localStorage.getItem("role");
+const BASE_URL="http://127.0.0.1:5000";
 
-if (loggedIn !== "true") location.href = "/employee/login";
-if (role !== "employee") location.href = "/admin/login";
-
-/* NAV */
-function goProducts(){ location.href="/products"; }
-function goTransactions(){ location.href="/transactions"; }
 function logout(){
-  localStorage.clear();
-  location.href="/employee/login";
+  fetch(`${BASE_URL}/logout`,{credentials:"include"})
+    .then(()=>window.location.href="/login-page");
 }
 
-/* ✅ TODAY SUMMARY (FIXED & ACCURATE) */
-fetch("/api/transactions")
-.then(res => res.json())
-.then(data => {
-  const today = new Date();
-  let inCount = 0, outCount = 0, total = 0;
+function goProducts(){window.location.href="/products";}
+function goTransactions(){window.location.href="/transactions";}
+function goReports(){window.location.href="/reports";}
 
-  data.forEach(t => {
-    // "16/01/2026, 02:40:14 PM"
-    const parts = t.date.split(",")[0].split("/");
-    const txDate = new Date(parts[2], parts[1]-1, parts[0]);
+async function loadStats(){
+  try{
+    const res=await fetch(`${BASE_URL}/api/stats`,{credentials:"include"});
+    const data=await res.json();
 
-    if (
-      txDate.getDate() === today.getDate() &&
-      txDate.getMonth() === today.getMonth() &&
-      txDate.getFullYear() === today.getFullYear()
-    ) {
-      total += t.quantity;
-      t.type === "IN" ? inCount++ : outCount++;
-    }
-  });
-
-  document.getElementById("summary").innerHTML = `
-    IN Transactions: ${inCount}<br>
-    OUT Transactions: ${outCount}<br>
-    Items Moved Today: ${total}
-  `;
-});
-
-/* LOW STOCK */
-fetch("/low-stock")
-.then(res=>res.json())
-.then(data=>{
-  if(data.items.length===0){
-    lowStock.innerHTML="No low stock items 🎉";
-    return;
+    document.getElementById("totalProducts").innerText=data.totalProducts;
+    document.getElementById("lowStock").innerText=data.lowStockItems;
+    document.getElementById("inventoryValue").innerText="₹"+data.inventoryValue;
+  }catch{
+    document.getElementById("totalProducts").innerText="—";
+    document.getElementById("lowStock").innerText="—";
+    document.getElementById("inventoryValue").innerText="₹—";
   }
-  lowStock.innerHTML=data.items.map(p=>`
-    <div class="list-item">
-      <span>${p.name}</span>
-      <span class="badge low">${p.quantity}</span>
-    </div>
-  `).join("");
-});
+}
 
-/* RECENT TRANSACTIONS */
-fetch("/api/transactions")
-.then(res=>res.json())
-.then(data=>{
-  recentTx.innerHTML=data.slice(0,5).map(t=>`
-    <div class="list-item">
-      <span>${t.productName}</span>
-      <span class="${t.type==="IN"?"in":"out"}">
-        ${t.type} (${t.quantity})
-      </span>
-    </div>
-  `).join("");
-});
+loadStats();
 </script>
 
 </body>
